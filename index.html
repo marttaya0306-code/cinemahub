@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>CHHAYA – Asian drama catalog</title>
+<title>Nightreel – Asian drama catalog</title>
 <style>
 :root{--bg:#14161c;--surface:#1d2029;--surface2:#262a36;--text:#eceef3;--muted:#9aa1b3;--accent:#ff8a3d;--accent-ink:#1a0e05;--line:#2f3443;--r:10px;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -115,7 +115,7 @@ nav.open{display:flex}
 <button class="more" id="more">Load more</button>
 </div>
 </main>
-<footer><div class="wrap">CHHAYA is a design demo with fictional titles. No video is hosted or streamed.</div></footer>
+<footer><div class="wrap">Nightreel is a design demo with fictional titles. No video is hosted or streamed.</div></footer>
 
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <div class="toast" id="toast"></div>
@@ -142,12 +142,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const navEl = $("#nav");
   if (navEl) navEl.innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
 
-  const countries = ["All", "Korea", "China", "Japan", "Thailand"];
-  const chipsEl = $("#chips");
-  if (chipsEl) chipsEl.innerHTML = countries.map(c => `<button class="chip" data-c="${c}">${c}</button>`).join("");
-
   const typeMap = { Drama: "Drama", Movies: "Movie", Anime: "Anime", Variety: "Variety" };
-  const langMap = { ko: "Korea", zh: "China", ja: "Japan", th: "Thailand" };
+
+  const countryMap = {
+    US: "USA", GB: "UK", KR: "Korea", JP: "Japan", CN: "China", TH: "Thailand",
+    FR: "France", ES: "Spain", DE: "Germany", IN: "India", CA: "Canada", AU: "Australia",
+    IT: "Italy", BR: "Brazil", MX: "Mexico", TW: "Taiwan", HK: "Hong Kong"
+  };
 
   function toast(m) {
     const t = $("#toast");
@@ -158,69 +159,97 @@ document.addEventListener("DOMContentLoaded", () => {
     toast.t = setTimeout(() => t.classList.remove("on"), 2200);
   }
 
-  const fallbackItems = [
-    { id: 0, tmdbId: 9991, media: "tv", title: "Midnight Cafe", country: "Korea", type: "Drama", eps: 16, rate: 8.6, year: 2026, desc: "A night-shift barista starts decoding the regulars’ secrets, one order at a time.", poster: "", backdrop: "", h: 12 },
-    { id: 1, tmdbId: 9992, media: "tv", title: "The Lantern Keeper", country: "China", type: "Drama", eps: 32, rate: 8.9, year: 2026, desc: "A young archivist inherits a lighthouse that records every promise made to the sea.", poster: "", backdrop: "", h: 28 },
-    { id: 2, tmdbId: 9993, media: "tv", title: "Paper Moons", country: "Japan", type: "Anime", eps: 12, rate: 8.2, year: 2026, desc: "Two rival origami artists fold their way into a city-wide mystery.", poster: "", backdrop: "", h: 200 },
-    { id: 3, tmdbId: 9994, media: "tv", title: "Seoul by Dawn", country: "Korea", type: "Drama", eps: 12, rate: 7.9, year: 2025, desc: "Three strangers share one train line and a single unsent letter.", poster: "", backdrop: "", h: 260 },
-    { id: 4, tmdbId: 9995, media: "tv", title: "Harbor Lights", country: "Thailand", type: "Drama", eps: 14, rate: 8.1, year: 2026, desc: "A returning ferry captain faces the town that remembers his departure.", poster: "", backdrop: "", h: 330 },
-    { id: 5, tmdbId: 9996, media: "tv", title: "Jade Ledger", country: "China", type: "Drama", eps: 40, rate: 9.0, year: 2025, desc: "An accountant to the imperial court finds a second set of books.", poster: "", backdrop: "", h: 150 }
-  ];
-
   async function loadTMDB() {
     const gridEl = $("#grid");
-    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading international titles from TMDB...</div>`;
+    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading global movies & shows from all countries...</div>`;
     try {
-      const langs = ["ko", "zh", "ja", "th"];
-      const requests = [
-        ...langs.map(l => fetch(`${BASE}/discover/tv?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "tv", lang: l, results: d.results || [] }))),
-        ...langs.map(l => fetch(`${BASE}/discover/movie?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "movie", lang: l, results: d.results || [] })))
-      ];
+      const [movieRes, tvRes] = await Promise.all([
+        fetch(`${BASE}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=1`),
+        fetch(`${BASE}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&page=1`)
+      ]);
+      const movieData = await movieRes.json();
+      const tvData = await tvRes.json();
 
-      const responses = await Promise.all(requests);
+      let fetched = [];
       let idx = 0;
-      const fetched = [];
 
-      responses.forEach(group => {
-        (group.results || []).slice(0, 8).forEach(raw => {
-          const isMovie = group.media === "movie";
-          const genres = raw.genre_ids || [];
-          let type = isMovie ? "Movie" : "Drama";
-          if (genres.includes(16)) type = "Anime";
-          else if (!isMovie && (genres.includes(10764) || genres.includes(10767))) type = "Variety";
+     
+      (movieData.results || []).forEach(raw => {
+        const genres = raw.genre_ids || [];
+        let type = "Movie";
+        if (genres.includes(16)) type = "Anime";
 
-          const dateStr = isMovie ? raw.release_date : raw.first_air_date;
-          const year = dateStr ? parseInt(dateStr.split("-")[0], 10) : 2026;
+        const code = raw.production_countries?.[0]?.iso_3166_1 || "US";
+        const cName = countryMap[code] || code || "International";
+        const year = raw.release_date ? parseInt(raw.release_date.split("-")[0], 10) : 2026;
 
-          fetched.push({
-            id: idx,
-            tmdbId: raw.id,
-            media: group.media,
-            title: isMovie ? raw.title : raw.name,
-            country: langMap[group.lang] || "Korea",
-            type: type,
-            eps: isMovie ? 1 : Math.max(8, (raw.id % 24) + 8),
-            rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
-            year: year || 2026,
-            desc: raw.overview || "No description available yet.",
-            poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
-            backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
-            h: hues[idx % hues.length]
-          });
-          idx++;
+        fetched.push({
+          id: idx++,
+          tmdbId: raw.id,
+          media: "movie",
+          title: raw.title,
+          country: cName,
+          type: type,
+          eps: 1,
+          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+          year: year || 2026,
+          desc: raw.overview || "No description available.",
+          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+          h: hues[idx % hues.length]
         });
       });
 
-      items = fetched.length > 0 ? fetched : fallbackItems;
+      // Process global TV series / dramas
+      (tvData.results || []).forEach(raw => {
+        const genres = raw.genre_ids || [];
+        let type = "Drama";
+        if (genres.includes(16)) type = "Anime";
+        else if (genres.includes(10764) || genres.includes(10767)) type = "Variety";
+
+        const code = raw.origin_country?.[0] || "US";
+        const cName = countryMap[code] || code || "International";
+        const year = raw.first_air_date ? parseInt(raw.first_air_date.split("-")[0], 10) : 2026;
+
+        fetched.push({
+          id: idx++,
+          tmdbId: raw.id,
+          media: "tv",
+          title: raw.name,
+          country: cName,
+          type: type,
+          eps: Math.max(8, (raw.id % 20) + 6),
+          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+          year: year || 2026,
+          desc: raw.overview || "No description available.",
+          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+          h: hues[idx % hues.length]
+        });
+      });
+
+      items = fetched;
+      buildCountryChips();
       heroBuild();
       render();
       auto();
     } catch (err) {
-      console.error("TMDB load error:", err);
-      items = fallbackItems;
+      console.error("TMDB error:", err);
+      items = [
+        { id: 0, tmdbId: 550, media: "movie", title: "Global Cinema Showcase", country: "USA", type: "Movie", eps: 1, rate: 8.8, year: 2026, desc: "Explore top movies and shows from around the world.", poster: "", backdrop: "", h: 12 }
+      ];
+      buildCountryChips();
       heroBuild();
       render();
       auto();
+    }
+  }
+
+  function buildCountryChips() {
+    const uniqueCountries = ["All", ...new Set(items.map(i => i.country))];
+    const chipsEl = $("#chips");
+    if (chipsEl) {
+      chipsEl.innerHTML = uniqueCountries.map(c => `<button class="chip${country === c ? " on" : ""}" data-c="${c}">${c}</button>`).join("");
     }
   }
 
@@ -392,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const d = t.dataset;
     if (t.id === "logo") { e.preventDefault(); nav = "Home"; country = "All"; term = ""; const q = $("#q"); if(q) q.value = ""; shown = 12; render(); }
     else if (d.n) { nav = d.n; shown = 12; render(); const n = $("#nav"); if(n) n.classList.remove("open"); }
-    else if (d.c) { country = d.c; shown = 12; render(); }
+    else if (d.c) { country = d.c; shown = 12; buildCountryChips(); render(); }
     else if (d.watch !== undefined) { watch(+d.watch, +(d.ep || 1)); }
     else if (d.id !== undefined) { detail(+d.id); }
     else if (d.save !== undefined) {
