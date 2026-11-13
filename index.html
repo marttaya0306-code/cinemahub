@@ -1152,7 +1152,7 @@ const TW_CONFIG = {
     currency: 'MYR'
 };
 
-// Create a pre-configured Axios instance for Transfer Wallet requests
+
 const twClient = axios.create({
     baseURL: TW_CONFIG.baseUrl,
     headers: {
@@ -1163,10 +1163,7 @@ const twClient = axios.create({
     timeout: 10000
 });
 
-/**
- * Check player wallet balance
- * @param {string} userCode - Unique player identifier
- */
+
 async function getWalletBalance(userCode) {
     try {
         const response = await twClient.post('/balance', {
@@ -1181,13 +1178,6 @@ async function getWalletBalance(userCode) {
     }
 }
 
-/**
- * Process a fund transfer (Deposit/Withdrawal)
- * @param {string} userCode - Unique player identifier
- * @param {number} amount - Amount in MYR
- * @param {string} transactionType - 'deposit' or 'withdraw'
- * @param {string} transactionUuid - Unique transaction reference ID
- */
 async function processTransfer(userCode, amount, transactionType, transactionUuid) {
     const endpoint = transactionType === 'deposit' ? '/deposit' : '/withdraw';
     
