@@ -121,92 +121,259 @@ nav.open{display:flex}
 <div class="toast" id="toast"></div>
 
 <script>
-const $=s=>document.querySelector(s);
-const seed=[
-["Midnight Cafe","Korea","Drama",16,8.6,2026,"A night-shift barista starts decoding the regulars’ secrets, one order at a time."],
-["The Lantern Keeper","China","Drama",32,8.9,2026,"A young archivist inherits a lighthouse that records every promise made to the sea."],
-["Paper Moons","Japan","Anime",12,8.2,2026,"Two rival origami artists fold their way into a city-wide mystery."],
-["Seoul by Dawn","Korea","Drama",12,7.9,2025,"Three strangers share one train line and a single unsent letter."],
-["Harbor Lights","Thailand","Drama",14,8.1,2026,"A returning ferry captain faces the town that remembers his departure."],
-["Jade Ledger","China","Drama",40,9.0,2025,"An accountant to the imperial court finds a second set of books."],
-["Rainy Season Rule","Japan","Drama",10,8.0,2026,"A weather forecaster who is always wrong meets the one person who isn’t."],
-["Static Hearts","Korea","Movie",1,7.6,2026,"A radio engineer picks up a station that broadcasts tomorrow."],
-["Orchid Street","Thailand","Drama",18,7.8,2025,"A flower market family fights to keep the lane where they grew up."],
-["Neon Sutra","Japan","Anime",24,8.7,2026,"A monk-turned-courier delivers parcels across a city of lights."],
-["The Last Tea House","China","Movie",1,8.3,2025,"One afternoon, four generations, a recipe no one wrote down."],
-["Crossfire Kitchen","Korea","Variety",20,7.5,2026,"Amateur chefs cook against the clock in a moving food truck."],
-["Winter Orchard","Korea","Drama",16,8.4,2025,"A fruit farmer and a city lawyer swap lives for one cold season."],
-["Ink & Thunder","Japan","Anime",26,8.8,2025,"A calligrapher’s brush brings storms to life."],
-["Silk Road Radio","China","Variety",12,7.4,2026,"Travelers trade stories live from a different oasis each week."],
-["Home Run Summer","Korea","Movie",1,7.9,2026,"A small-town team, one last season, and a borrowed bat."],
-["Moonlit Counsel","Thailand","Drama",16,8.0,2026,"A night-court clerk starts solving the cases before they’re filed."],
-["Glass Garden","Japan","Drama",11,8.3,2025,"A botanist rebuilds a greenhouse and the family inside it."],
-["Tidebreakers","Korea","Drama",20,8.5,2026,"Female divers turn a local rescue into a national story."],
-["Cinder Crown","China","Drama",36,8.6,2025,"A kitchen maid learns the court’s politics through its menus."]
-];
-const hues=[12,28,200,260,330,150,45,185,300,100];
-const items=seed.map((s,i)=>({id:i,title:s[0],country:s[1],type:s[2],eps:s[3],rate:s[4],year:s[5],desc:s[6],h:hues[i%hues.length]}));
-const bg=h=>`linear-gradient(160deg,hsl(${h} 55% 38%),hsl(${(h+50)%360} 50% 16%))`;
-let nav="Home",country="All",sort="new",term="",shown=12,slide=0,timer;
-let saved=[];try{saved=JSON.parse(localStorage.getItem("nr-saved")||"[]")}catch(e){}
-const navs=["Home","Drama","Movies","Anime","Variety","My list"];
-$("#nav").innerHTML=navs.map(n=>`<button data-n="${n}">${n}</button>`).join("");
-const countries=["All","Korea","China","Japan","Thailand"];
-$("#chips").innerHTML=countries.map(c=>`<button class="chip" data-c="${c}">${c}</button>`).join("");
-const typeMap={Drama:"Drama",Movies:"Movie",Anime:"Anime",Variety:"Variety"};
-function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("on"),2200)}
-function list(){
-let r=items.filter(i=>(country==="All"||i.country===country)&&i.title.toLowerCase().includes(term.toLowerCase()));
-if(typeMap[nav])r=r.filter(i=>i.type===typeMap[nav]);
-if(nav==="My list")r=r.filter(i=>saved.includes(i.id));
-if(sort==="new")r.sort((a,b)=>b.year-a.year||a.id-b.id);
-if(sort==="rate")r.sort((a,b)=>b.rate-a.rate);
-if(sort==="az")r.sort((a,b)=>a.title.localeCompare(b.title));
-return r}
-function render(){
-document.querySelectorAll("#nav button").forEach(b=>b.classList.toggle("on",b.dataset.n===nav));
-document.querySelectorAll(".chip").forEach(b=>b.classList.toggle("on",b.dataset.c===country));
-$("#ttl").textContent=term?`Results for “${term}”`:nav==="Home"?"Latest updates":nav;
-const r=list();
-$("#grid").innerHTML=r.length?r.slice(0,shown).map(i=>`<button class="card" data-id="${i.id}"><div class="poster" style="background:${bg(i.h)}"><span class="ini">${i.title[0]}</span><span class="badge">${i.type==="Movie"?"Movie":"EP "+i.eps}</span><span class="rate">★ ${i.rate}</span><span class="play">▶</span></div><div class="t">${i.title}</div><div class="m">${i.country} · ${i.year}</div></button>`).join(""):`<div class="empty">${nav==="My list"?"Your list is empty. Open a title and tap Add to list.":"No titles match. Try another search or filter."}</div>`;
-$("#more").style.display=r.length>shown?"block":"none"}
-function heroBuild(){
-const f=[...items].sort((a,b)=>b.rate-a.rate).slice(0,5);
-$("#hero").innerHTML=f.map((i,k)=>`<div class="slide${k===0?" on":""}" style="background:${bg(i.h)}"><div class="in"><div class="meta"><span class="tag">${i.type}</span><span>${i.country}</span><span>${i.year}</span><span>★ ${i.rate}</span></div><h2>${i.title}</h2><p>${i.desc}</p><button class="btn p" data-watch="${i.id}">▶ Play</button> <button class="btn s" data-id="${i.id}">Details</button></div></div>`).join("")+`<button class="arrow l" data-d="-1" aria-label="Previous">‹</button><button class="arrow r" data-d="1" aria-label="Next">›</button><div class="dots">${f.map((_,k)=>`<button data-k="${k}" aria-label="Slide ${k+1}" class="${k===0?"on":""}"></button>`).join("")}</div>`}
-function go(k){const s=document.querySelectorAll(".slide"),d=document.querySelectorAll(".dots button");slide=(k+s.length)%s.length;s.forEach((e,j)=>e.classList.toggle("on",j===slide));d.forEach((e,j)=>e.classList.toggle("on",j===slide))}
-function auto(){clearInterval(timer);if(!matchMedia("(prefers-reduced-motion:reduce)").matches)timer=setInterval(()=>go(slide+1),6000)}
-function detail(id){
-const i=items[id],on=saved.includes(id);
-$("#sheet").innerHTML=`<button class="x" data-close aria-label="Close">✕</button><div class="dh"><div class="poster" style="background:${bg(i.h)}"><span class="ini">${i.title[0]}</span></div><div><h2>${i.title}</h2><div class="meta"><span class="tag">${i.type}</span><span>${i.country}</span><span>${i.year}</span><span>${i.eps} ${i.eps>1?"episodes":"episode"}</span><span>★ ${i.rate}</span></div><p>${i.desc}</p><button class="btn p" data-watch="${id}">▶ Watch episode 1</button> <button class="btn s" data-save="${id}">${on?"✓ In your list":"+ Add to list"}</button></div></div><div class="eps"><h4>Episodes</h4><div class="epg">${Array.from({length:i.eps},(_,k)=>`<button data-watch="${id}" data-ep="${k+1}">${k+1}</button>`).join("")}</div></div>`;
-open_()}
-function watch(id,ep=1){
-const i=items[id];
-$("#sheet").innerHTML=`<button class="x" data-close aria-label="Close">✕</button><div class="player"><div><strong>${i.title}${i.eps>1?" – Episode "+ep:""}</strong>Demo player. This catalog doesn’t host any video.</div></div><div class="pc"><span>${i.title}${i.eps>1?" · Ep "+ep+" of "+i.eps:""}</span>${ep>1?`<button class="btn s" data-watch="${id}" data-ep="${ep-1}">‹ Prev</button>`:""}${ep<i.eps?`<button class="btn p" data-watch="${id}" data-ep="${ep+1}">Next ›</button>`:""}<button class="btn s" data-id="${id}">Details</button></div>`;
-open_()}
-function open_(){$("#modal").classList.add("open");document.body.style.overflow="hidden";$("#modal").scrollTop=0}
-function close_(){$("#modal").classList.remove("open");document.body.style.overflow=""}
-document.addEventListener("click",e=>{
-const t=e.target.closest("button,a");
-if(e.target.id==="modal"){close_();return}
-if(!t)return;
-const d=t.dataset;
-if(t.id==="logo"){e.preventDefault();nav="Home";country="All";term="";$("#q").value="";shown=12;render()}
-else if(d.n){nav=d.n;shown=12;render();$("#nav").classList.remove("open")}
-else if(d.c){country=d.c;shown=12;render()}
-else if(d.watch!==undefined){watch(+d.watch,+(d.ep||1))}
-else if(d.id!==undefined){detail(+d.id)}
-else if(d.save!==undefined){const id=+d.save;saved=saved.includes(id)?saved.filter(x=>x!==id):[...saved,id];try{localStorage.setItem("nr-saved",JSON.stringify(saved))}catch(_){}
-toast(saved.includes(id)?"Added to your list":"Removed from your list");detail(id);render()}
-else if(d.close!==undefined)close_();
-else if(d.d)go(slide+ +d.d),auto();
-else if(d.k)go(+d.k),auto();
-else if(t.id==="more"){shown+=8;render()}
-else if(t.id==="burger")$("#nav").classList.toggle("open");
+<script>
+const API_KEY = "976a28e22b2840518b7045613a7d7dbc";
+const BASE = "https://api.themoviedb.org/3";
+const IMG = "https://image.tmdb.org/t/p/w500";
+const BG_IMG = "https://image.tmdb.org/t/p/w1280";
+
+const $ = s => document.querySelector(s);
+const hues = [12, 28, 200, 260, 330, 150, 45, 185, 300, 100];
+const bg = h => `linear-gradient(160deg,hsl(${h} 55% 38%),hsl(${(h+50)%360} 50% 16%))`;
+const posterStyle = i => i.poster ? `background:url('${i.poster}') center/cover no-repeat` : `background:${bg(i.h)}`;
+const slideStyle = i => i.backdrop ? `background:linear-gradient(to right, rgba(10,12,18,.92) 30%, rgba(10,12,18,.35)), url('${i.backdrop}') center/cover no-repeat` : `background:${bg(i.h)}`;
+
+let items = [];
+let nav = "Home", country = "All", sort = "new", term = "", shown = 12, slide = 0, timer;
+let saved = [];
+try { saved = JSON.parse(localStorage.getItem("nr-saved") || "[]"); } catch (e) {}
+
+const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "My list"];
+$("#nav").innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
+
+const countries = ["All", "Korea", "China", "Japan", "Thailand"];
+$("#chips").innerHTML = countries.map(c => `<button class="chip" data-c="${c}">${c}</button>`).join("");
+
+const typeMap = { Drama: "Drama", Movies: "Movie", Anime: "Anime", Variety: "Variety" };
+const langMap = { ko: "Korea", zh: "China", ja: "Japan", th: "Thailand" };
+
+function toast(m) {
+  const t = $("#toast");
+  t.textContent = m;
+  t.classList.add("on");
+  clearTimeout(toast.t);
+  toast.t = setTimeout(() => t.classList.remove("on"), 2200);
+}
+
+async function loadTMDB() {
+  $("#grid").innerHTML = `<div class="empty">Loading international titles...</div>`;
+  try {
+    const langs = ["ko", "zh", "ja", "th"];
+    const requests = [
+      ...langs.map(l => fetch(`${BASE}/discover/tv?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "tv", lang: l, results: d.results || [] }))),
+      ...langs.map(l => fetch(`${BASE}/discover/movie?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "movie", lang: l, results: d.results || [] })))
+    ];
+
+    const responses = await Promise.all(requests);
+    let idx = 0;
+    const fetched = [];
+
+    responses.forEach(group => {
+      group.results.slice(0, 8).forEach(raw => {
+        const isMovie = group.media === "movie";
+        const genres = raw.genre_ids || [];
+        let type = isMovie ? "Movie" : "Drama";
+        if (genres.includes(16)) type = "Anime";
+        else if (!isMovie && (genres.includes(10764) || genres.includes(10767))) type = "Variety";
+
+        const dateStr = isMovie ? raw.release_date : raw.first_air_date;
+        const year = dateStr ? parseInt(dateStr.split("-")[0], 10) : 2026;
+
+        fetched.push({
+          id: idx,
+          tmdbId: raw.id,
+          media: group.media,
+          title: isMovie ? raw.title : raw.name,
+          country: langMap[group.lang] || "Korea",
+          type: type,
+          eps: isMovie ? 1 : Math.max(8, (raw.id % 24) + 8),
+          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+          year: year || 2026,
+          desc: raw.overview || "No description available yet.",
+          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+          h: hues[idx % hues.length]
+        });
+        idx++;
+      });
+    });
+
+    items = fetched;
+    heroBuild();
+    render();
+    auto();
+  } catch (err) {
+    console.error(err);
+    $("#grid").innerHTML = `<div class="empty">Unable to load titles from TMDB. Please refresh.</div>`;
+  }
+}
+
+function list() {
+  let r = items.filter(i => (country === "All" || i.country === country) && i.title.toLowerCase().includes(term.toLowerCase()));
+  if (typeMap[nav]) r = r.filter(i => i.type === typeMap[nav]);
+  if (nav === "My list") r = r.filter(i => saved.includes(i.tmdbId));
+  if (sort === "new") r.sort((a, b) => b.year - a.year || a.id - b.id);
+  if (sort === "rate") r.sort((a, b) => b.rate - a.rate);
+  if (sort === "az") r.sort((a, b) => a.title.localeCompare(b.title));
+  return r;
+}
+
+function render() {
+  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.n === nav));
+  document.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", b.dataset.c === country));
+  $("#ttl").textContent = term ? `Results for “${term}”` : nav === "Home" ? "Latest updates" : nav;
+  const r = list();
+  $("#grid").innerHTML = r.length ? r.slice(0, shown).map(i => `
+    <button class="card" data-id="${i.id}">
+      <div class="poster" style="${posterStyle(i)}">
+        ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+        <span class="badge">${i.type === "Movie" ? "Movie" : "EP " + i.eps}</span>
+        <span class="rate">★ ${i.rate}</span>
+        <span class="play">▶</span>
+      </div>
+      <div class="t">${i.title}</div>
+      <div class="m">${i.country} · ${i.year}</div>
+    </button>
+  `).join("") : `<div class="empty">${nav === "My list" ? "Your list is empty. Open a title and tap Add to list." : "No titles match. Try another search or filter."}</div>`;
+  $("#more").style.display = r.length > shown ? "block" : "none";
+}
+
+function heroBuild() {
+  const f = [...items].filter(x => x.backdrop).sort((a, b) => b.rate - a.rate).slice(0, 5);
+  if (!f.length) return;
+  $("#hero").innerHTML = f.map((i, k) => `
+    <div class="slide${k === 0 ? " on" : ""}" style="${slideStyle(i)}">
+      <div class="in">
+        <div class="meta">
+          <span class="tag">${i.type}</span>
+          <span>${i.country}</span>
+          <span>${i.year}</span>
+          <span>★ ${i.rate}</span>
+        </div>
+        <h2>${i.title}</h2>
+        <p>${i.desc}</p>
+        <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
+        <button class="btn s" data-id="${i.id}">Details</button>
+      </div>
+    </div>
+  `).join("") + `
+    <button class="arrow l" data-d="-1" aria-label="Previous">‹</button>
+    <button class="arrow r" data-d="1" aria-label="Next">›</button>
+    <div class="dots">${f.map((_, k) => `<button data-k="${k}" aria-label="Slide ${k + 1}" class="${k === 0 ? "on" : ""}"></button>`).join("")}</div>
+  `;
+}
+
+function go(k) {
+  const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
+  if (!s.length) return;
+  slide = (k + s.length) % s.length;
+  s.forEach((e, j) => e.classList.toggle("on", j === slide));
+  d.forEach((e, j) => e.classList.toggle("on", j === slide));
+}
+
+function auto() {
+  clearInterval(timer);
+  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) timer = setInterval(() => go(slide + 1), 6000);
+}
+
+function detail(id) {
+  const i = items[id];
+  if (!i) return;
+  const on = saved.includes(i.tmdbId);
+  $("#sheet").innerHTML = `
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="dh">
+      <div class="poster" style="${posterStyle(i)}">
+        ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+      </div>
+      <div>
+        <h2>${i.title}</h2>
+        <div class="meta">
+          <span class="tag">${i.type}</span>
+          <span>${i.country}</span>
+          <span>${i.year}</span>
+          <span>${i.eps} ${i.eps > 1 ? "episodes" : "episode"}</span>
+          <span>★ ${i.rate}</span>
+        </div>
+        <p>${i.desc}</p>
+        <button class="btn p" data-watch="${id}">▶ Watch Trailer</button>
+        <button class="btn s" data-save="${id}">${on ? "✓ In your list" : "+ Add to list"}</button>
+      </div>
+    </div>
+    ${i.eps > 1 ? `<div class="eps"><h4>Episodes</h4><div class="epg">${Array.from({ length: i.eps }, (_, k) => `<button data-watch="${id}" data-ep="${k + 1}">${k + 1}</button>`).join("")}</div></div>` : ""}
+  `;
+  open_();
+}
+
+async function watch(id, ep = 1) {
+  const i = items[id];
+  if (!i) return;
+  $("#sheet").innerHTML = `
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="player"><div><strong>Loading official trailer...</strong></div></div>
+  `;
+  open_();
+
+  let ytKey = null;
+  try {
+    const res = await fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`);
+    const data = await res.json();
+    const vid = (data.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (data.results || []).find(v => v.site === "YouTube");
+    if (vid) ytKey = vid.key;
+  } catch (e) {}
+
+  $("#sheet").innerHTML = `
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="player" style="padding:0;overflow:hidden">
+      ${ytKey
+        ? `<iframe width="100%" height="100%" style="border:0;aspect-ratio:16/9" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+        : `<div style="padding:24px"><strong>${i.title}${i.eps > 1 ? " – Episode " + ep : ""}</strong>Official YouTube trailer is unavailable for this title.</div>`
+      }
+    </div>
+    <div class="pc">
+      <span>${i.title}${i.eps > 1 ? " · Ep " + ep + " of " + i.eps : ""}</span>
+      ${ep > 1 ? `<button class="btn s" data-watch="${id}" data-ep="${ep - 1}">‹ Prev</button>` : ""}
+      ${ep < i.eps ? `<button class="btn p" data-watch="${id}" data-ep="${ep + 1}">Next ›</button>` : ""}
+      <button class="btn s" data-id="${id}">Details</button>
+    </div>
+  `;
+}
+
+function open_() { $("#modal").classList.add("open"); document.body.style.overflow = "hidden"; $("#modal").scrollTop = 0; }
+function close_() { $("#modal").classList.remove("open"); document.body.style.overflow = ""; $("#sheet").innerHTML = ""; }
+
+document.addEventListener("click", e => {
+  const t = e.target.closest("button,a");
+  if (e.target.id === "modal") { close_(); return; }
+  if (!t) return;
+  const d = t.dataset;
+  if (t.id === "logo") { e.preventDefault(); nav = "Home"; country = "All"; term = ""; $("#q").value = ""; shown = 12; render(); }
+  else if (d.n) { nav = d.n; shown = 12; render(); $("#nav").classList.remove("open"); }
+  else if (d.c) { country = d.c; shown = 12; render(); }
+  else if (d.watch !== undefined) { watch(+d.watch, +(d.ep || 1)); }
+  else if (d.id !== undefined) { detail(+d.id); }
+  else if (d.save !== undefined) {
+    const item = items[+d.save];
+    if (!item) return;
+    const tid = item.tmdbId;
+    saved = saved.includes(tid) ? saved.filter(x => x !== tid) : [...saved, tid];
+    try { localStorage.setItem("nr-saved", JSON.stringify(saved)); } catch (_) {}
+    toast(saved.includes(tid) ? "Added to your list" : "Removed from your list");
+    detail(+d.save);
+    render();
+  }
+  else if (d.close !== undefined) close_();
+  else if (d.d) go(slide + +d.d), auto();
+  else if (d.k) go(+d.k), auto();
+  else if (t.id === "more") { shown += 8; render(); }
+  else if (t.id === "burger") $("#nav").classList.toggle("open");
 });
-$("#q").addEventListener("input",e=>{term=e.target.value.trim();shown=12;render()});
-$("#sort").addEventListener("change",e=>{sort=e.target.value;render()});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")close_()});
-heroBuild();render();auto();
+
+$("#q").addEventListener("input", e => { term = e.target.value.trim(); shown = 12; render(); });
+$("#sort").addEventListener("change", e => { sort = e.target.value; render(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape") close_(); });
+
+loadTMDB();
 </script>
 </body>
 </html>
