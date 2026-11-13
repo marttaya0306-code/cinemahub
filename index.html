@@ -1014,52 +1014,142 @@ footer {
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+  const API_KEY = "976a28e22b2840518b7045613a7d7dbc";
+  const BASE = "https://api.themoviedb.org/3";
+  const IMG = "https://image.tmdb.org/t/p/w500";
+  const BG_IMG = "https://image.tmdb.org/t/p/w1280";
+
   const $ = s => document.querySelector(s);
   const hues = [12, 28, 200, 260, 330, 150, 45, 185, 300, 100];
   const bg = h => `linear-gradient(160deg,hsl(${h} 55% 38%),hsl(${(h+50)%360} 50% 16%))`;
   const posterStyle = i => i.poster ? `background:url('${i.poster}') center/cover no-repeat` : `background:${bg(i.h)}`;
+  const slideStyle = i => i.backdrop ? `background:linear-gradient(to right, rgba(10,12,18,.92) 30%, rgba(10,12,18,.35)), url('${i.backdrop}') center/cover no-repeat` : `background:${bg(i.h)}`;
 
   let items = [];
-  let nav = "Home", category = "All", sort = "new", term = "", shown = 18;
-  let userBalance = 1250.00;
+  let nav = "Home", country = "All", sort = "new", term = "", shown = 12, slide = 0, timer;
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem("nr-saved") || "[]"); } catch (e) {}
 
-  const navs = ["Home", "Slots", "Live Casino", "Sports", "Fishing", "Favorites"];
+  const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "My list"];
   const navEl = $("#nav");
   if (navEl) navEl.innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
 
-  const typeMap = { Slots: "Slot", "Live Casino": "Live", Sports: "Sports", Fishing: "Fishing" };
+  const typeMap = { Drama: "Drama", Movies: "Movie", Anime: "Anime", Variety: "Variety" };
 
- 
-  function loadCasinoGames() {
-    const gridEl = $("#grid");
-    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading Theone Prod game catalog...</div>`;
+  const countryMap = {
+    US: "USA", GB: "UK", KR: "Korea", JP: "Japan", CN: "China", TH: "Thailand",
+    FR: "France", ES: "Spain", DE: "Germany", IN: "India", CA: "Canada", AU: "Australia",
+    IT: "Italy", BR: "Brazil", MX: "Mexico", TW: "Taiwan", HK: "Hong Kong"
+  };
 
-    items = [
-      { id: 0, title: "Book of Dead", provider: "Play'n GO", type: "Slot", rtp: "96.21%", rate: "9.8", year: 2026, badge: "HOT", poster: "https://images.unsplash.com/photo-1596838132731-3301c3fd4317?w=500", h: 12 },
-      { id: 1, title: "Money Train 3", provider: "Relax Gaming", type: "Slot", rtp: "96.10%", rate: "9.9", year: 2026, badge: "JILI", poster: "https://images.unsplash.com/photo-1518609878373-06d740f60d8b?w=500", h: 28 },
-      { id: 2, title: "Super Ace", provider: "JILI", type: "Slot", rtp: "97.00%", rate: "9.5", year: 2026, badge: "HOT", poster: "https://images.unsplash.com/photo-1511512578047-dfb367046420?w=500", h: 200 },
-      { id: 3, title: "Lightning Roulette", provider: "Live Casino", type: "Live", rtp: "97.30%", rate: "9.7", year: 2026, badge: "LIVE", poster: "https://images.unsplash.com/photo-1606167668584-78701c57f13d?w=500", h: 260 },
-      { id: 4, title: "Soccer Betting Hub", provider: "Theone Sports", type: "Sports", rtp: "98.00%", rate: "9.4", year: 2026, badge: "SPORTS", poster: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=500", h: 330 },
-      { id: 5, title: "Mega Fishing", provider: "JILI", type: "Fishing", rtp: "96.80%", rate: "9.2", year: 2026, badge: "NEW", poster: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=500", h: 150 },
-      { id: 6, title: "Temple Tumble Megaways", provider: "Relax Gaming", type: "Slot", rtp: "96.25%", rate: "9.6", year: 2026, badge: "SLOT", poster: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=500", h: 45 },
-      { id: 7, title: "Reactoonz", provider: "Play'n GO", type: "Slot", rtp: "96.51%", rate: "9.7", year: 2026, badge: "HOT", poster: "https://images.unsplash.com/photo-1563089145-599997674d42?w=500", h: 185 }
-    ];
-
-    buildCategories();
-    render();
+  function toast(m) {
+    const t = $("#toast");
+    if (!t) return;
+    t.textContent = m;
+    t.classList.add("on");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => t.classList.remove("on"), 2200);
   }
 
-  function buildCategories() {
-    const cats = ["All", "Slot", "Live", "Sports", "Fishing"];
+  async function loadTMDB() {
+    const gridEl = $("#grid");
+    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading global movies & shows from all countries...</div>`;
+    try {
+      const [movieRes, tvRes] = await Promise.all([
+        fetch(`${BASE}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=1`),
+        fetch(`${BASE}/discover/tv?api_key=${API_KEY}&sort_by=popularity.desc&page=1`)
+      ]);
+      const movieData = await movieRes.json();
+      const tvData = await tvRes.json();
+
+      let fetched = [];
+      let idx = 0;
+
+     
+      (movieData.results || []).forEach(raw => {
+        const genres = raw.genre_ids || [];
+        let type = "Movie";
+        if (genres.includes(16)) type = "Anime";
+
+        const code = raw.production_countries?.[0]?.iso_3166_1 || "US";
+        const cName = countryMap[code] || code || "International";
+        const year = raw.release_date ? parseInt(raw.release_date.split("-")[0], 10) : 2026;
+
+        fetched.push({
+          id: idx++,
+          tmdbId: raw.id,
+          media: "movie",
+          title: raw.title,
+          country: cName,
+          type: type,
+          eps: 1,
+          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+          year: year || 2026,
+          desc: raw.overview || "No description available.",
+          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+          h: hues[idx % hues.length]
+        });
+      });
+
+      // Process global TV series / dramas
+      (tvData.results || []).forEach(raw => {
+        const genres = raw.genre_ids || [];
+        let type = "Drama";
+        if (genres.includes(16)) type = "Anime";
+        else if (genres.includes(10764) || genres.includes(10767)) type = "Variety";
+
+        const code = raw.origin_country?.[0] || "US";
+        const cName = countryMap[code] || code || "International";
+        const year = raw.first_air_date ? parseInt(raw.first_air_date.split("-")[0], 10) : 2026;
+
+        fetched.push({
+          id: idx++,
+          tmdbId: raw.id,
+          media: "tv",
+          title: raw.name,
+          country: cName,
+          type: type,
+          eps: Math.max(8, (raw.id % 20) + 6),
+          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+          year: year || 2026,
+          desc: raw.overview || "No description available.",
+          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+          h: hues[idx % hues.length]
+        });
+      });
+
+      items = fetched;
+      buildCountryChips();
+      heroBuild();
+      render();
+      auto();
+    } catch (err) {
+      console.error("TMDB error:", err);
+      items = [
+        { id: 0, tmdbId: 550, media: "movie", title: "Global Cinema Showcase", country: "USA", type: "Movie", eps: 1, rate: 8.8, year: 2026, desc: "Explore top movies and shows from around the world.", poster: "", backdrop: "", h: 12 }
+      ];
+      buildCountryChips();
+      heroBuild();
+      render();
+      auto();
+    }
+  }
+
+  function buildCountryChips() {
+    const uniqueCountries = ["All", ...new Set(items.map(i => i.country))];
     const chipsEl = $("#chips");
     if (chipsEl) {
-      chipsEl.innerHTML = cats.map(c => `<button class="chip${category === c ? " on" : ""}" data-c="${c}">${c === "Live" ? "Live Casino" : c}</button>`).join("");
+      chipsEl.innerHTML = uniqueCountries.map(c => `<button class="chip${country === c ? " on" : ""}" data-c="${c}">${c}</button>`).join("");
     }
   }
 
   function list() {
-    let r = items.filter(i => (category === "All" || i.type === category) && i.title.toLowerCase().includes(term.toLowerCase()));
+    let r = items.filter(i => (country === "All" || i.country === country) && i.title.toLowerCase().includes(term.toLowerCase()));
     if (typeMap[nav]) r = r.filter(i => i.type === typeMap[nav]);
+    if (nav === "My list") r = r.filter(i => saved.includes(i.tmdbId));
+    if (sort === "new") r.sort((a, b) => b.year - a.year || a.id - b.id);
     if (sort === "rate") r.sort((a, b) => b.rate - a.rate);
     if (sort === "az") r.sort((a, b) => a.title.localeCompare(b.title));
     return r;
@@ -1067,141 +1157,192 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function render() {
     document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.n === nav));
-    document.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", b.dataset.c === category));
-    
+    document.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", b.dataset.c === country));
     const ttlEl = $("#ttl");
-    if (ttlEl) ttlEl.textContent = term ? `Search results for “${term}”` : nav === "Home" ? "Featured Games & Lobby" : nav;
-    
+    if (ttlEl) ttlEl.textContent = term ? `Results for “${term}”` : nav === "Home" ? "Latest updates" : nav;
     const r = list();
     const gridEl = $("#grid");
     if (gridEl) {
       gridEl.innerHTML = r.length ? r.slice(0, shown).map(i => `
-        <button class="card" data-launch="${i.id}">
+        <button class="card" data-id="${i.id}">
           <div class="poster" style="${posterStyle(i)}">
-            <span class="badge">${i.badge}</span>
-            <span class="rate">RTP ${i.rtp}</span>
-            <span class="play">▶ PLAY</span>
+            ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+            <span class="badge">${i.type === "Movie" ? "Movie" : "EP " + i.eps}</span>
+            <span class="rate">★ ${i.rate}</span>
+            <span class="play">▶</span>
           </div>
           <div class="t">${i.title}</div>
-          <div class="m">${i.provider}</div>
+          <div class="m">${i.country} · ${i.year}</div>
         </button>
-      `).join("") : `<div class="empty">No games found matching your search.</div>`;
+      `).join("") : `<div class="empty">${nav === "My list" ? "Your list is empty. Open a title and tap Add to list." : "No titles match. Try another search or filter."}</div>`;
     }
+    const moreEl = $("#more");
+    if (moreEl) moreEl.style.display = r.length > shown ? "block" : "none";
   }
 
-  function launchGame(id) {
+  function heroBuild() {
+    const heroEl = $("#hero");
+    if (!heroEl) return;
+    const backdrops = items.filter(x => x.backdrop);
+    const f = backdrops.length ? backdrops.sort((a, b) => b.rate - a.rate).slice(0, 5) : items.slice(0, 5);
+    if (!f.length) return;
+    heroEl.innerHTML = f.map((i, k) => `
+      <div class="slide${k === 0 ? " on" : ""}" style="${slideStyle(i)}">
+        <div class="in">
+          <div class="meta">
+            <span class="tag">${i.type}</span>
+            <span>${i.country}</span>
+            <span>${i.year}</span>
+            <span>★ ${i.rate}</span>
+          </div>
+          <h2>${i.title}</h2>
+          <p>${i.desc}</p>
+          <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
+          <button class="btn s" data-id="${i.id}">Details</button>
+        </div>
+      </div>
+    `).join("") + `
+      <button class="arrow l" data-d="-1" aria-label="Previous">‹</button>
+      <button class="arrow r" data-d="1" aria-label="Next">›</button>
+      <div class="dots">${f.map((_, k) => `<button data-k="${k}" aria-label="Slide ${k + 1}" class="${k === 0 ? "on" : ""}"></button>`).join("")}</div>
+    `;
+  }
+
+  function go(k) {
+    const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
+    if (!s.length) return;
+    slide = (k + s.length) % s.length;
+    s.forEach((e, j) => e.classList.toggle("on", j === slide));
+    d.forEach((e, j) => e.classList.toggle("on", j === slide));
+  }
+
+  function auto() {
+    clearInterval(timer);
+    if (!matchMedia("(prefers-reduced-motion:reduce)").matches) timer = setInterval(() => go(slide + 1), 6000);
+  }
+
+  function detail(id) {
+    const i = items[id];
+    if (!i) return;
+    const on = saved.includes(i.tmdbId);
+    const sheetEl = $("#sheet");
+    if (sheetEl) {
+      sheetEl.innerHTML = `
+        <button class="x" data-close aria-label="Close">✕</button>
+        <div class="dh">
+          <div class="poster" style="${posterStyle(i)}">
+            ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+          </div>
+          <div>
+            <h2>${i.title}</h2>
+            <div class="meta">
+              <span class="tag">${i.type}</span>
+              <span>${i.country}</span>
+              <span>${i.year}</span>
+              <span>${i.eps} ${i.eps > 1 ? "episodes" : "episode"}</span>
+              <span>★ ${i.rate}</span>
+            </div>
+            <p>${i.desc}</p>
+            <button class="btn p" data-watch="${id}">▶ Watch Trailer</button>
+            <button class="btn s" data-save="${id}">${on ? "✓ In your list" : "+ Add to list"}</button>
+          </div>
+        </div>
+        ${i.eps > 1 ? `<div class="eps"><h4>Episodes</h4><div class="epg">${Array.from({ length: i.eps }, (_, k) => `<button data-watch="${id}" data-ep="${k + 1}">${k + 1}</button>`).join("")}</div></div>` : ""}
+      `;
+    }
+    open_();
+  }
+
+  async function watch(id, ep = 1) {
     const i = items[id];
     if (!i) return;
     const sheetEl = $("#sheet");
     if (sheetEl) {
       sheetEl.innerHTML = `
         <button class="x" data-close aria-label="Close">✕</button>
-        <div style="padding:24px; text-align:center;">
-          <h2 style="margin-bottom:10px;">${i.title}</h2>
-          <p style="color:var(--muted); margin-bottom:20px;">Provider: ${i.provider} | Currency: AUD (Agent: BCGAME96AU)</p>
-          <div style="position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:12px; overflow:hidden; display:grid; place-items:center;">
-            <div style="color:#fff;">
-              <p style="font-size:18px; margin-bottom:12px;">Secure Session Handshake Active</p>
-              <button class="btn p" onclick="alert('Connected to Theone Prod API endpoint for agent BCGAME96AU!')">Launch Fullscreen Game Window</button>
-            </div>
-          </div>
+        <div class="player"><div><strong>Loading official trailer...</strong></div></div>
+      `;
+    }
+    open_();
+
+    let ytKey = null;
+    try {
+      const res = await fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`);
+      const data = await res.json();
+      const vid = (data.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (data.results || []).find(v => v.site === "YouTube");
+      if (vid) ytKey = vid.key;
+    } catch (e) {}
+
+    if (sheetEl) {
+      sheetEl.innerHTML = `
+        <button class="x" data-close aria-label="Close">✕</button>
+        <div class="player" style="padding:0;overflow:hidden">
+          ${ytKey
+            ? `<iframe width="100%" height="100%" style="border:0;aspect-ratio:16/9" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            : `<div style="padding:24px"><strong>${i.title}${i.eps > 1 ? " – Episode " + ep : ""}</strong>Official YouTube trailer is unavailable for this title.</div>`
+          }
+        </div>
+        <div class="pc">
+          <span>${i.title}${i.eps > 1 ? " · Ep " + ep + " of " + i.eps : ""}</span>
+          ${ep > 1 ? `<button class="btn s" data-watch="${id}" data-ep="${ep - 1}">‹ Prev</button>` : ""}
+          ${ep < i.eps ? `<button class="btn p" data-watch="${id}" data-ep="${ep + 1}">Next ›</button>` : ""}
+          <button class="btn s" data-id="${id}">Details</button>
         </div>
       `;
     }
-    openModal();
   }
 
-  function openModal() {
+  function open_() {
     const modal = $("#modal");
     if (modal) modal.classList.add("open");
     document.body.style.overflow = "hidden";
+    if (modal) modal.scrollTop = 0;
   }
-
-  function closeModal() {
+  function close_() {
     const modal = $("#modal");
     if (modal) modal.classList.remove("open");
     document.body.style.overflow = "";
+    const sheet = $("#sheet");
+    if (sheet) sheet.innerHTML = "";
   }
 
   document.addEventListener("click", e => {
     const t = e.target.closest("button,a");
-    if (e.target.id === "modal") { closeModal(); return; }
+    if (e.target.id === "modal") { close_(); return; }
     if (!t) return;
     const d = t.dataset;
-    if (t.id === "logo") { e.preventDefault(); nav = "Home"; category = "All"; term = ""; render(); }
-    else if (d.n) { nav = d.n; category = "All"; render(); }
-    else if (d.c) { category = d.c; render(); }
-    else if (d.launch !== undefined) { launchGame(+d.launch); }
-    else if (d.close !== undefined) closeModal();
+    if (t.id === "logo") { e.preventDefault(); nav = "Home"; country = "All"; term = ""; const q = $("#q"); if(q) q.value = ""; shown = 12; render(); }
+    else if (d.n) { nav = d.n; shown = 12; render(); const n = $("#nav"); if(n) n.classList.remove("open"); }
+    else if (d.c) { country = d.c; shown = 12; buildCountryChips(); render(); }
+    else if (d.watch !== undefined) { watch(+d.watch, +(d.ep || 1)); }
+    else if (d.id !== undefined) { detail(+d.id); }
+    else if (d.save !== undefined) {
+      const item = items[+d.save];
+      if (!item) return;
+      const tid = item.tmdbId;
+      saved = saved.includes(tid) ? saved.filter(x => x !== tid) : [...saved, tid];
+      try { localStorage.setItem("nr-saved", JSON.stringify(saved)); } catch (_) {}
+      toast(saved.includes(tid) ? "Added to your list" : "Removed from your list");
+      detail(+d.save);
+      render();
+    }
+    else if (d.close !== undefined) close_();
+    else if (d.d) { go(slide + +d.d); auto(); }
+    else if (d.k) { go(+d.k); auto(); }
+    else if (t.id === "more") { shown += 8; render(); }
+    else if (t.id === "burger") { const n = $("#nav"); if(n) n.classList.toggle("open"); }
   });
 
   const qInput = $("#q");
-  if (qInput) qInput.addEventListener("input", e => { term = e.target.value.trim(); render(); });
+  if (qInput) qInput.addEventListener("input", e => { term = e.target.value.trim(); shown = 12; render(); });
 
   const sortSelect = $("#sort");
   if (sortSelect) sortSelect.addEventListener("change", e => { sort = e.target.value; render(); });
 
-  loadCasinoGames();
+  document.addEventListener("keydown", e => { if (e.key === "Escape") close_(); });
+
+  loadTMDB();
 });
-const axios = require('axios');
-
-const TW_CONFIG = {
-    baseUrl: 'https://twallet.wowgamenew.com/tw/v1/wallet/',
-    wlCode: 'tabpokies-tw-freepro-prod',
-    apiKey: '-yoLU1fPrXmckWcI2GlPeib0qQK~vCTK_32WUTNzam8BpmAWOj',
-    currency: 'MYR'
-};
-
-
-const twClient = axios.create({
-    baseURL: TW_CONFIG.baseUrl,
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${TW_CONFIG.apiKey}`,
-        'X-WL-Code': TW_CONFIG.wlCode
-    },
-    timeout: 10000
-});
-
-
-async function getWalletBalance(userCode) {
-    try {
-        const response = await twClient.post('/balance', {
-            user_code: userCode,
-            currency: TW_CONFIG.currency,
-            wl_code: TW_CONFIG.wlCode
-        });
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch wallet balance:', error.response?.data || error.message);
-        throw error;
-    }
-}
-
-async function processTransfer(userCode, amount, transactionType, transactionUuid) {
-    const endpoint = transactionType === 'deposit' ? '/deposit' : '/withdraw';
-    
-    const payload = {
-        user_code: userCode,
-        amount: Number(amount).toFixed(2),
-        currency: TW_CONFIG.currency,
-        wl_code: TW_CONFIG.wlCode,
-        transaction_uuid: transactionUuid
-    };
-
-    try {
-        const response = await twClient.post(endpoint, payload);
-        return response.data;
-    } catch (error) {
-        console.error(`Transfer (${transactionType}) failed:`, error.response?.data || error.message);
-        throw error;
-    }
-}
-
-module.exports = {
-    getWalletBalance,
-    processTransfer
-};
 </script>
 </body>
 </html>
