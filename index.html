@@ -121,259 +121,308 @@ nav.open{display:flex}
 <div class="toast" id="toast"></div>
 
 <script>
-<script>
-const API_KEY = "976a28e22b2840518b7045613a7d7dbc";
-const BASE = "https://api.themoviedb.org/3";
-const IMG = "https://image.tmdb.org/t/p/w500";
-const BG_IMG = "https://image.tmdb.org/t/p/w1280";
+document.addEventListener("DOMContentLoaded", () => {
+  const API_KEY = "976a28e22b2840518b7045613a7d7dbc";
+  const BASE = "https://api.themoviedb.org/3";
+  const IMG = "https://image.tmdb.org/t/p/w500";
+  const BG_IMG = "https://image.tmdb.org/t/p/w1280";
 
-const $ = s => document.querySelector(s);
-const hues = [12, 28, 200, 260, 330, 150, 45, 185, 300, 100];
-const bg = h => `linear-gradient(160deg,hsl(${h} 55% 38%),hsl(${(h+50)%360} 50% 16%))`;
-const posterStyle = i => i.poster ? `background:url('${i.poster}') center/cover no-repeat` : `background:${bg(i.h)}`;
-const slideStyle = i => i.backdrop ? `background:linear-gradient(to right, rgba(10,12,18,.92) 30%, rgba(10,12,18,.35)), url('${i.backdrop}') center/cover no-repeat` : `background:${bg(i.h)}`;
+  const $ = s => document.querySelector(s);
+  const hues = [12, 28, 200, 260, 330, 150, 45, 185, 300, 100];
+  const bg = h => `linear-gradient(160deg,hsl(${h} 55% 38%),hsl(${(h+50)%360} 50% 16%))`;
+  const posterStyle = i => i.poster ? `background:url('${i.poster}') center/cover no-repeat` : `background:${bg(i.h)}`;
+  const slideStyle = i => i.backdrop ? `background:linear-gradient(to right, rgba(10,12,18,.92) 30%, rgba(10,12,18,.35)), url('${i.backdrop}') center/cover no-repeat` : `background:${bg(i.h)}`;
 
-let items = [];
-let nav = "Home", country = "All", sort = "new", term = "", shown = 12, slide = 0, timer;
-let saved = [];
-try { saved = JSON.parse(localStorage.getItem("nr-saved") || "[]"); } catch (e) {}
+  let items = [];
+  let nav = "Home", country = "All", sort = "new", term = "", shown = 12, slide = 0, timer;
+  let saved = [];
+  try { saved = JSON.parse(localStorage.getItem("nr-saved") || "[]"); } catch (e) {}
 
-const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "My list"];
-$("#nav").innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
+  const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "My list"];
+  const navEl = $("#nav");
+  if (navEl) navEl.innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
 
-const countries = ["All", "Korea", "China", "Japan", "Thailand"];
-$("#chips").innerHTML = countries.map(c => `<button class="chip" data-c="${c}">${c}</button>`).join("");
+  const countries = ["All", "Korea", "China", "Japan", "Thailand"];
+  const chipsEl = $("#chips");
+  if (chipsEl) chipsEl.innerHTML = countries.map(c => `<button class="chip" data-c="${c}">${c}</button>`).join("");
 
-const typeMap = { Drama: "Drama", Movies: "Movie", Anime: "Anime", Variety: "Variety" };
-const langMap = { ko: "Korea", zh: "China", ja: "Japan", th: "Thailand" };
+  const typeMap = { Drama: "Drama", Movies: "Movie", Anime: "Anime", Variety: "Variety" };
+  const langMap = { ko: "Korea", zh: "China", ja: "Japan", th: "Thailand" };
 
-function toast(m) {
-  const t = $("#toast");
-  t.textContent = m;
-  t.classList.add("on");
-  clearTimeout(toast.t);
-  toast.t = setTimeout(() => t.classList.remove("on"), 2200);
-}
+  function toast(m) {
+    const t = $("#toast");
+    if (!t) return;
+    t.textContent = m;
+    t.classList.add("on");
+    clearTimeout(toast.t);
+    toast.t = setTimeout(() => t.classList.remove("on"), 2200);
+  }
 
-async function loadTMDB() {
-  $("#grid").innerHTML = `<div class="empty">Loading international titles...</div>`;
-  try {
-    const langs = ["ko", "zh", "ja", "th"];
-    const requests = [
-      ...langs.map(l => fetch(`${BASE}/discover/tv?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "tv", lang: l, results: d.results || [] }))),
-      ...langs.map(l => fetch(`${BASE}/discover/movie?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "movie", lang: l, results: d.results || [] })))
-    ];
+  // Fallback data so the site never goes blank
+  const fallbackItems = [
+    { id: 0, tmdbId: 9991, media: "tv", title: "Midnight Cafe", country: "Korea", type: "Drama", eps: 16, rate: 8.6, year: 2026, desc: "A night-shift barista starts decoding the regulars’ secrets, one order at a time.", poster: "", backdrop: "", h: 12 },
+    { id: 1, tmdbId: 9992, media: "tv", title: "The Lantern Keeper", country: "China", type: "Drama", eps: 32, rate: 8.9, year: 2026, desc: "A young archivist inherits a lighthouse that records every promise made to the sea.", poster: "", backdrop: "", h: 28 },
+    { id: 2, tmdbId: 9993, media: "tv", title: "Paper Moons", country: "Japan", type: "Anime", eps: 12, rate: 8.2, year: 2026, desc: "Two rival origami artists fold their way into a city-wide mystery.", poster: "", backdrop: "", h: 200 },
+    { id: 3, tmdbId: 9994, media: "tv", title: "Seoul by Dawn", country: "Korea", type: "Drama", eps: 12, rate: 7.9, year: 2025, desc: "Three strangers share one train line and a single unsent letter.", poster: "", backdrop: "", h: 260 },
+    { id: 4, tmdbId: 9995, media: "tv", title: "Harbor Lights", country: "Thailand", type: "Drama", eps: 14, rate: 8.1, year: 2026, desc: "A returning ferry captain faces the town that remembers his departure.", poster: "", backdrop: "", h: 330 },
+    { id: 5, tmdbId: 9996, media: "tv", title: "Jade Ledger", country: "China", type: "Drama", eps: 40, rate: 9.0, year: 2025, desc: "An accountant to the imperial court finds a second set of books.", poster: "", backdrop: "", h: 150 }
+  ];
 
-    const responses = await Promise.all(requests);
-    let idx = 0;
-    const fetched = [];
+  async function loadTMDB() {
+    const gridEl = $("#grid");
+    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading international titles from TMDB...</div>`;
+    try {
+      const langs = ["ko", "zh", "ja", "th"];
+      const requests = [
+        ...langs.map(l => fetch(`${BASE}/discover/tv?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "tv", lang: l, results: d.results || [] }))),
+        ...langs.map(l => fetch(`${BASE}/discover/movie?api_key=${API_KEY}&with_original_language=${l}&sort_by=popularity.desc`).then(r => r.json()).then(d => ({ media: "movie", lang: l, results: d.results || [] })))
+      ];
 
-    responses.forEach(group => {
-      group.results.slice(0, 8).forEach(raw => {
-        const isMovie = group.media === "movie";
-        const genres = raw.genre_ids || [];
-        let type = isMovie ? "Movie" : "Drama";
-        if (genres.includes(16)) type = "Anime";
-        else if (!isMovie && (genres.includes(10764) || genres.includes(10767))) type = "Variety";
+      const responses = await Promise.all(requests);
+      let idx = 0;
+      const fetched = [];
 
-        const dateStr = isMovie ? raw.release_date : raw.first_air_date;
-        const year = dateStr ? parseInt(dateStr.split("-")[0], 10) : 2026;
+      responses.forEach(group => {
+        (group.results || []).slice(0, 8).forEach(raw => {
+          const isMovie = group.media === "movie";
+          const genres = raw.genre_ids || [];
+          let type = isMovie ? "Movie" : "Drama";
+          if (genres.includes(16)) type = "Anime";
+          else if (!isMovie && (genres.includes(10764) || genres.includes(10767))) type = "Variety";
 
-        fetched.push({
-          id: idx,
-          tmdbId: raw.id,
-          media: group.media,
-          title: isMovie ? raw.title : raw.name,
-          country: langMap[group.lang] || "Korea",
-          type: type,
-          eps: isMovie ? 1 : Math.max(8, (raw.id % 24) + 8),
-          rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
-          year: year || 2026,
-          desc: raw.overview || "No description available yet.",
-          poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
-          backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
-          h: hues[idx % hues.length]
+          const dateStr = isMovie ? raw.release_date : raw.first_air_date;
+          const year = dateStr ? parseInt(dateStr.split("-")[0], 10) : 2026;
+
+          fetched.push({
+            id: idx,
+            tmdbId: raw.id,
+            media: group.media,
+            title: isMovie ? raw.title : raw.name,
+            country: langMap[group.lang] || "Korea",
+            type: type,
+            eps: isMovie ? 1 : Math.max(8, (raw.id % 24) + 8),
+            rate: raw.vote_average ? Number(raw.vote_average.toFixed(1)) : 8.0,
+            year: year || 2026,
+            desc: raw.overview || "No description available yet.",
+            poster: raw.poster_path ? `${IMG}${raw.poster_path}` : "",
+            backdrop: raw.backdrop_path ? `${BG_IMG}${raw.backdrop_path}` : "",
+            h: hues[idx % hues.length]
+          });
+          idx++;
         });
-        idx++;
       });
-    });
 
-    items = fetched;
-    heroBuild();
-    render();
-    auto();
-  } catch (err) {
-    console.error(err);
-    $("#grid").innerHTML = `<div class="empty">Unable to load titles from TMDB. Please refresh.</div>`;
+      items = fetched.length > 0 ? fetched : fallbackItems;
+      heroBuild();
+      render();
+      auto();
+    } catch (err) {
+      console.error("TMDB load error:", err);
+      items = fallbackItems;
+      heroBuild();
+      render();
+      auto();
+    }
   }
-}
 
-function list() {
-  let r = items.filter(i => (country === "All" || i.country === country) && i.title.toLowerCase().includes(term.toLowerCase()));
-  if (typeMap[nav]) r = r.filter(i => i.type === typeMap[nav]);
-  if (nav === "My list") r = r.filter(i => saved.includes(i.tmdbId));
-  if (sort === "new") r.sort((a, b) => b.year - a.year || a.id - b.id);
-  if (sort === "rate") r.sort((a, b) => b.rate - a.rate);
-  if (sort === "az") r.sort((a, b) => a.title.localeCompare(b.title));
-  return r;
-}
-
-function render() {
-  document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.n === nav));
-  document.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", b.dataset.c === country));
-  $("#ttl").textContent = term ? `Results for “${term}”` : nav === "Home" ? "Latest updates" : nav;
-  const r = list();
-  $("#grid").innerHTML = r.length ? r.slice(0, shown).map(i => `
-    <button class="card" data-id="${i.id}">
-      <div class="poster" style="${posterStyle(i)}">
-        ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
-        <span class="badge">${i.type === "Movie" ? "Movie" : "EP " + i.eps}</span>
-        <span class="rate">★ ${i.rate}</span>
-        <span class="play">▶</span>
-      </div>
-      <div class="t">${i.title}</div>
-      <div class="m">${i.country} · ${i.year}</div>
-    </button>
-  `).join("") : `<div class="empty">${nav === "My list" ? "Your list is empty. Open a title and tap Add to list." : "No titles match. Try another search or filter."}</div>`;
-  $("#more").style.display = r.length > shown ? "block" : "none";
-}
-
-function heroBuild() {
-  const f = [...items].filter(x => x.backdrop).sort((a, b) => b.rate - a.rate).slice(0, 5);
-  if (!f.length) return;
-  $("#hero").innerHTML = f.map((i, k) => `
-    <div class="slide${k === 0 ? " on" : ""}" style="${slideStyle(i)}">
-      <div class="in">
-        <div class="meta">
-          <span class="tag">${i.type}</span>
-          <span>${i.country}</span>
-          <span>${i.year}</span>
-          <span>★ ${i.rate}</span>
-        </div>
-        <h2>${i.title}</h2>
-        <p>${i.desc}</p>
-        <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
-        <button class="btn s" data-id="${i.id}">Details</button>
-      </div>
-    </div>
-  `).join("") + `
-    <button class="arrow l" data-d="-1" aria-label="Previous">‹</button>
-    <button class="arrow r" data-d="1" aria-label="Next">›</button>
-    <div class="dots">${f.map((_, k) => `<button data-k="${k}" aria-label="Slide ${k + 1}" class="${k === 0 ? "on" : ""}"></button>`).join("")}</div>
-  `;
-}
-
-function go(k) {
-  const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
-  if (!s.length) return;
-  slide = (k + s.length) % s.length;
-  s.forEach((e, j) => e.classList.toggle("on", j === slide));
-  d.forEach((e, j) => e.classList.toggle("on", j === slide));
-}
-
-function auto() {
-  clearInterval(timer);
-  if (!matchMedia("(prefers-reduced-motion:reduce)").matches) timer = setInterval(() => go(slide + 1), 6000);
-}
-
-function detail(id) {
-  const i = items[id];
-  if (!i) return;
-  const on = saved.includes(i.tmdbId);
-  $("#sheet").innerHTML = `
-    <button class="x" data-close aria-label="Close">✕</button>
-    <div class="dh">
-      <div class="poster" style="${posterStyle(i)}">
-        ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
-      </div>
-      <div>
-        <h2>${i.title}</h2>
-        <div class="meta">
-          <span class="tag">${i.type}</span>
-          <span>${i.country}</span>
-          <span>${i.year}</span>
-          <span>${i.eps} ${i.eps > 1 ? "episodes" : "episode"}</span>
-          <span>★ ${i.rate}</span>
-        </div>
-        <p>${i.desc}</p>
-        <button class="btn p" data-watch="${id}">▶ Watch Trailer</button>
-        <button class="btn s" data-save="${id}">${on ? "✓ In your list" : "+ Add to list"}</button>
-      </div>
-    </div>
-    ${i.eps > 1 ? `<div class="eps"><h4>Episodes</h4><div class="epg">${Array.from({ length: i.eps }, (_, k) => `<button data-watch="${id}" data-ep="${k + 1}">${k + 1}</button>`).join("")}</div></div>` : ""}
-  `;
-  open_();
-}
-
-async function watch(id, ep = 1) {
-  const i = items[id];
-  if (!i) return;
-  $("#sheet").innerHTML = `
-    <button class="x" data-close aria-label="Close">✕</button>
-    <div class="player"><div><strong>Loading official trailer...</strong></div></div>
-  `;
-  open_();
-
-  let ytKey = null;
-  try {
-    const res = await fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`);
-    const data = await res.json();
-    const vid = (data.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (data.results || []).find(v => v.site === "YouTube");
-    if (vid) ytKey = vid.key;
-  } catch (e) {}
-
-  $("#sheet").innerHTML = `
-    <button class="x" data-close aria-label="Close">✕</button>
-    <div class="player" style="padding:0;overflow:hidden">
-      ${ytKey
-        ? `<iframe width="100%" height="100%" style="border:0;aspect-ratio:16/9" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-        : `<div style="padding:24px"><strong>${i.title}${i.eps > 1 ? " – Episode " + ep : ""}</strong>Official YouTube trailer is unavailable for this title.</div>`
-      }
-    </div>
-    <div class="pc">
-      <span>${i.title}${i.eps > 1 ? " · Ep " + ep + " of " + i.eps : ""}</span>
-      ${ep > 1 ? `<button class="btn s" data-watch="${id}" data-ep="${ep - 1}">‹ Prev</button>` : ""}
-      ${ep < i.eps ? `<button class="btn p" data-watch="${id}" data-ep="${ep + 1}">Next ›</button>` : ""}
-      <button class="btn s" data-id="${id}">Details</button>
-    </div>
-  `;
-}
-
-function open_() { $("#modal").classList.add("open"); document.body.style.overflow = "hidden"; $("#modal").scrollTop = 0; }
-function close_() { $("#modal").classList.remove("open"); document.body.style.overflow = ""; $("#sheet").innerHTML = ""; }
-
-document.addEventListener("click", e => {
-  const t = e.target.closest("button,a");
-  if (e.target.id === "modal") { close_(); return; }
-  if (!t) return;
-  const d = t.dataset;
-  if (t.id === "logo") { e.preventDefault(); nav = "Home"; country = "All"; term = ""; $("#q").value = ""; shown = 12; render(); }
-  else if (d.n) { nav = d.n; shown = 12; render(); $("#nav").classList.remove("open"); }
-  else if (d.c) { country = d.c; shown = 12; render(); }
-  else if (d.watch !== undefined) { watch(+d.watch, +(d.ep || 1)); }
-  else if (d.id !== undefined) { detail(+d.id); }
-  else if (d.save !== undefined) {
-    const item = items[+d.save];
-    if (!item) return;
-    const tid = item.tmdbId;
-    saved = saved.includes(tid) ? saved.filter(x => x !== tid) : [...saved, tid];
-    try { localStorage.setItem("nr-saved", JSON.stringify(saved)); } catch (_) {}
-    toast(saved.includes(tid) ? "Added to your list" : "Removed from your list");
-    detail(+d.save);
-    render();
+  function list() {
+    let r = items.filter(i => (country === "All" || i.country === country) && i.title.toLowerCase().includes(term.toLowerCase()));
+    if (typeMap[nav]) r = r.filter(i => i.type === typeMap[nav]);
+    if (nav === "My list") r = r.filter(i => saved.includes(i.tmdbId));
+    if (sort === "new") r.sort((a, b) => b.year - a.year || a.id - b.id);
+    if (sort === "rate") r.sort((a, b) => b.rate - a.rate);
+    if (sort === "az") r.sort((a, b) => a.title.localeCompare(b.title));
+    return r;
   }
-  else if (d.close !== undefined) close_();
-  else if (d.d) go(slide + +d.d), auto();
-  else if (d.k) go(+d.k), auto();
-  else if (t.id === "more") { shown += 8; render(); }
-  else if (t.id === "burger") $("#nav").classList.toggle("open");
+
+  function render() {
+    document.querySelectorAll("#nav button").forEach(b => b.classList.toggle("on", b.dataset.n === nav));
+    document.querySelectorAll(".chip").forEach(b => b.classList.toggle("on", b.dataset.c === country));
+    const ttlEl = $("#ttl");
+    if (ttlEl) ttlEl.textContent = term ? `Results for “${term}”` : nav === "Home" ? "Latest updates" : nav;
+    const r = list();
+    const gridEl = $("#grid");
+    if (gridEl) {
+      gridEl.innerHTML = r.length ? r.slice(0, shown).map(i => `
+        <button class="card" data-id="${i.id}">
+          <div class="poster" style="${posterStyle(i)}">
+            ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+            <span class="badge">${i.type === "Movie" ? "Movie" : "EP " + i.eps}</span>
+            <span class="rate">★ ${i.rate}</span>
+            <span class="play">▶</span>
+          </div>
+          <div class="t">${i.title}</div>
+          <div class="m">${i.country} · ${i.year}</div>
+        </button>
+      `).join("") : `<div class="empty">${nav === "My list" ? "Your list is empty. Open a title and tap Add to list." : "No titles match. Try another search or filter."}</div>`;
+    }
+    const moreEl = $("#more");
+    if (moreEl) moreEl.style.display = r.length > shown ? "block" : "none";
+  }
+
+  function heroBuild() {
+    const heroEl = $("#hero");
+    if (!heroEl) return;
+    const backdrops = items.filter(x => x.backdrop);
+    const f = backdrops.length ? backdrops.sort((a, b) => b.rate - a.rate).slice(0, 5) : items.slice(0, 5);
+    if (!f.length) return;
+    heroEl.innerHTML = f.map((i, k) => `
+      <div class="slide${k === 0 ? " on" : ""}" style="${slideStyle(i)}">
+        <div class="in">
+          <div class="meta">
+            <span class="tag">${i.type}</span>
+            <span>${i.country}</span>
+            <span>${i.year}</span>
+            <span>★ ${i.rate}</span>
+          </div>
+          <h2>${i.title}</h2>
+          <p>${i.desc}</p>
+          <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
+          <button class="btn s" data-id="${i.id}">Details</button>
+        </div>
+      </div>
+    `).join("") + `
+      <button class="arrow l" data-d="-1" aria-label="Previous">‹</button>
+      <button class="arrow r" data-d="1" aria-label="Next">›</button>
+      <div class="dots">${f.map((_, k) => `<button data-k="${k}" aria-label="Slide ${k + 1}" class="${k === 0 ? "on" : ""}"></button>`).join("")}</div>
+    `;
+  }
+
+  function go(k) {
+    const s = document.querySelectorAll(".slide"), d = document.querySelectorAll(".dots button");
+    if (!s.length) return;
+    slide = (k + s.length) % s.length;
+    s.forEach((e, j) => e.classList.toggle("on", j === slide));
+    d.forEach((e, j) => e.classList.toggle("on", j === slide));
+  }
+
+  function auto() {
+    clearInterval(timer);
+    if (!matchMedia("(prefers-reduced-motion:reduce)").matches) timer = setInterval(() => go(slide + 1), 6000);
+  }
+
+  function detail(id) {
+    const i = items[id];
+    if (!i) return;
+    const on = saved.includes(i.tmdbId);
+    const sheetEl = $("#sheet");
+    if (sheetEl) {
+      sheetEl.innerHTML = `
+        <button class="x" data-close aria-label="Close">✕</button>
+        <div class="dh">
+          <div class="poster" style="${posterStyle(i)}">
+            ${i.poster ? "" : `<span class="ini">${i.title[0]}</span>`}
+          </div>
+          <div>
+            <h2>${i.title}</h2>
+            <div class="meta">
+              <span class="tag">${i.type}</span>
+              <span>${i.country}</span>
+              <span>${i.year}</span>
+              <span>${i.eps} ${i.eps > 1 ? "episodes" : "episode"}</span>
+              <span>★ ${i.rate}</span>
+            </div>
+            <p>${i.desc}</p>
+            <button class="btn p" data-watch="${id}">▶ Watch Trailer</button>
+            <button class="btn s" data-save="${id}">${on ? "✓ In your list" : "+ Add to list"}</button>
+          </div>
+        </div>
+        ${i.eps > 1 ? `<div class="eps"><h4>Episodes</h4><div class="epg">${Array.from({ length: i.eps }, (_, k) => `<button data-watch="${id}" data-ep="${k + 1}">${k + 1}</button>`).join("")}</div></div>` : ""}
+      `;
+    }
+    open_();
+  }
+
+  async function watch(id, ep = 1) {
+    const i = items[id];
+    if (!i) return;
+    const sheetEl = $("#sheet");
+    if (sheetEl) {
+      sheetEl.innerHTML = `
+        <button class="x" data-close aria-label="Close">✕</button>
+        <div class="player"><div><strong>Loading official trailer...</strong></div></div>
+      `;
+    }
+    open_();
+
+    let ytKey = null;
+    try {
+      const res = await fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`);
+      const data = await res.json();
+      const vid = (data.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (data.results || []).find(v => v.site === "YouTube");
+      if (vid) ytKey = vid.key;
+    } catch (e) {}
+
+    if (sheetEl) {
+      sheetEl.innerHTML = `
+        <button class="x" data-close aria-label="Close">✕</button>
+        <div class="player" style="padding:0;overflow:hidden">
+          ${ytKey
+            ? `<iframe width="100%" height="100%" style="border:0;aspect-ratio:16/9" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
+            : `<div style="padding:24px"><strong>${i.title}${i.eps > 1 ? " – Episode " + ep : ""}</strong>Official YouTube trailer is unavailable for this title.</div>`
+          }
+        </div>
+        <div class="pc">
+          <span>${i.title}${i.eps > 1 ? " · Ep " + ep + " of " + i.eps : ""}</span>
+          ${ep > 1 ? `<button class="btn s" data-watch="${id}" data-ep="${ep - 1}">‹ Prev</button>` : ""}
+          ${ep < i.eps ? `<button class="btn p" data-watch="${id}" data-ep="${ep + 1}">Next ›</button>` : ""}
+          <button class="btn s" data-id="${id}">Details</button>
+        </div>
+      `;
+    }
+  }
+
+  function open_() {
+    const modal = $("#modal");
+    if (modal) modal.classList.add("open");
+    document.body.style.overflow = "hidden";
+    if (modal) modal.scrollTop = 0;
+  }
+  function close_() {
+    const modal = $("#modal");
+    if (modal) modal.classList.remove("open");
+    document.body.style.overflow = "";
+    const sheet = $("#sheet");
+    if (sheet) sheet.innerHTML = "";
+  }
+
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button,a");
+    if (e.target.id === "modal") { close_(); return; }
+    if (!t) return;
+    const d = t.dataset;
+    if (t.id === "logo") { e.preventDefault(); nav = "Home"; country = "All"; term = ""; const q = $("#q"); if(q) q.value = ""; shown = 12; render(); }
+    else if (d.n) { nav = d.n; shown = 12; render(); const n = $("#nav"); if(n) n.classList.remove("open"); }
+    else if (d.c) { country = d.c; shown = 12; render(); }
+    else if (d.watch !== undefined) { watch(+d.watch, +(d.ep || 1)); }
+    else if (d.id !== undefined) { detail(+d.id); }
+    else if (d.save !== undefined) {
+      const item = items[+d.save];
+      if (!item) return;
+      const tid = item.tmdbId;
+      saved = saved.includes(tid) ? saved.filter(x => x !== tid) : [...saved, tid];
+      try { localStorage.setItem("nr-saved", JSON.stringify(saved)); } catch (_) {}
+      toast(saved.includes(tid) ? "Added to your list" : "Removed from your list");
+      detail(+d.save);
+      render();
+    }
+    else if (d.close !== undefined) close_();
+    else if (d.d) { go(slide + +d.d); auto(); }
+    else if (d.k) { go(+d.k); auto(); }
+    else if (t.id === "more") { shown += 8; render(); }
+    else if (t.id === "burger") { const n = $("#nav"); if(n) n.classList.toggle("open"); }
+  });
+
+  const qInput = $("#q");
+  if (qInput) qInput.addEventListener("input", e => { term = e.target.value.trim(); shown = 12; render(); });
+
+  const sortSelect = $("#sort");
+  if (sortSelect) sortSelect.addEventListener("change", e => { sort = e.target.value; render(); });
+
+  document.addEventListener("keydown", e => { if (e.key === "Escape") close_(); });
+
+  loadTMDB();
 });
-
-$("#q").addEventListener("input", e => { term = e.target.value.trim(); shown = 12; render(); });
-$("#sort").addEventListener("change", e => { sort = e.target.value; render(); });
-document.addEventListener("keydown", e => { if (e.key === "Escape") close_(); });
-
-loadTMDB();
 </script>
 </body>
 </html>
