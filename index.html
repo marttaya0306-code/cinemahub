@@ -1052,7 +1052,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function loadTMDB() {
     const gridEl = $("#grid");
-    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading global movies & shows from all countries...</div>`;
+    if (gridEl) gridEl.innerHTML = `<div class="empty">Loading global streaming catalog...</div>`;
     try {
       const [movieRes, tvRes] = await Promise.all([
         fetch(`${BASE}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=1`),
@@ -1064,7 +1064,6 @@ document.addEventListener("DOMContentLoaded", () => {
       let fetched = [];
       let idx = 0;
 
-     
       (movieData.results || []).forEach(raw => {
         const genres = raw.genre_ids || [];
         let type = "Movie";
@@ -1091,7 +1090,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       });
 
-      // Process global TV series / dramas
       (tvData.results || []).forEach(raw => {
         const genres = raw.genre_ids || [];
         let type = "Drama";
@@ -1196,7 +1194,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <h2>${i.title}</h2>
           <p>${i.desc}</p>
-          <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
+          <button class="btn p" data-watch="${i.id}">▶ Stream / Watch</button>
           <button class="btn s" data-id="${i.id}">Details</button>
         </div>
       </div>
@@ -1242,7 +1240,7 @@ document.addEventListener("DOMContentLoaded", () => {
               <span>★ ${i.rate}</span>
             </div>
             <p>${i.desc}</p>
-            <button class="btn p" data-watch="${id}">▶ Watch Trailer</button>
+            <button class="btn p" data-watch="${id}">▶ Stream / Watch</button>
             <button class="btn s" data-save="${id}">${on ? "✓ In your list" : "+ Add to list"}</button>
           </div>
         </div>
@@ -1259,32 +1257,61 @@ document.addEventListener("DOMContentLoaded", () => {
     if (sheetEl) {
       sheetEl.innerHTML = `
         <button class="x" data-close aria-label="Close">✕</button>
-        <div class="player"><div><strong>Loading official trailer...</strong></div></div>
+        <div class="player"><div><strong>Checking streaming platforms & trailers...</strong></div></div>
       `;
     }
     open_();
 
+    let streamingLinks = [];
     let ytKey = null;
+
     try {
-      const res = await fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`);
-      const data = await res.json();
-      const vid = (data.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (data.results || []).find(v => v.site === "YouTube");
+      const [provRes, vidRes] = await Promise.all([
+        fetch(`${BASE}/${i.media}/${i.tmdbId}/watch/providers?api_key=${API_KEY}`),
+        fetch(`${BASE}/${i.media}/${i.tmdbId}/videos?api_key=${API_KEY}`)
+      ]);
+      const provData = await provRes.json();
+      const vidData = await vidRes.json();
+
+      const regionData = provData.results?.KH || provData.results?.US || {};
+      streamingLinks = regionData.flatrate || regionData.rent || [];
+
+      const vid = (vidData.results || []).find(v => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser")) || (vidData.results || []).find(v => v.site === "YouTube");
       if (vid) ytKey = vid.key;
     } catch (e) {}
 
     if (sheetEl) {
       sheetEl.innerHTML = `
         <button class="x" data-close aria-label="Close">✕</button>
-        <div class="player" style="padding:0;overflow:hidden">
-          ${ytKey
-            ? `<iframe width="100%" height="100%" style="border:0;aspect-ratio:16/9" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`
-            : `<div style="padding:24px"><strong>${i.title}${i.eps > 1 ? " – Episode " + ep : ""}</strong>Official YouTube trailer is unavailable for this title.</div>`
-          }
+        <div style="padding:24px; text-align:left; max-height:75vh; overflow-y:auto;">
+          <h2 style="margin-bottom:8px;">Stream: ${i.title}</h2>
+          <p style="color:#aaa; font-size:14px; margin-bottom:20px;">Official streaming options and preview trailer:</p>
+          
+          <div style="margin-bottom:24px;">
+            <h4 style="margin-bottom:10px; color:#fff;">Verified Streaming Platforms:</h4>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              ${streamingLinks.length > 0
+                ? streamingLinks.map(p => `
+                    <a href="https://www.google.com/search?q=watch+${encodeURIComponent(i.title)}+on+${p.provider_name}" target="_blank" class="btn p" style="background:#e50914; color:#fff; text-decoration:none; padding:10px 16px; border-radius:6px; display:inline-flex; align-items:center; gap:6px;">
+                      Watch on ${p.provider_name}
+                    </a>
+                  `).join("")
+                : `<a href="https://www.google.com/search?q=watch+${encodeURIComponent(i.title)}" target="_blank" class="btn p" style="background:#3b82f6; color:#fff; text-decoration:none; padding:10px 16px; border-radius:6px;">Search Online Platforms</a>`
+              }
+            </div>
+          </div>
+
+          ${ytKey ? `
+            <div>
+              <h4 style="margin-bottom:10px; color:#fff;">Official Trailer:</h4>
+              <div style="position:relative; width:100%; aspect-ratio:16/9; background:#000; border-radius:8px; overflow:hidden;">
+                <iframe width="100%" height="100%" style="border:0; position:absolute; top:0; left:0;" src="https://www.youtube.com/embed/${ytKey}?autoplay=1" title="${i.title} Trailer" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+              </div>
+            </div>
+          ` : ""}
         </div>
         <div class="pc">
-          <span>${i.title}${i.eps > 1 ? " · Ep " + ep + " of " + i.eps : ""}</span>
-          ${ep > 1 ? `<button class="btn s" data-watch="${id}" data-ep="${ep - 1}">‹ Prev</button>` : ""}
-          ${ep < i.eps ? `<button class="btn p" data-watch="${id}" data-ep="${ep + 1}">Next ›</button>` : ""}
+          <span>${i.title}</span>
           <button class="btn s" data-id="${id}">Details</button>
         </div>
       `;
