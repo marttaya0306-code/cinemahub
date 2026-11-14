@@ -105,8 +105,8 @@ label{font-size:.8rem;color:var(--mute);display:block;margin-bottom:.2rem}
 
 <script>
 tailwind.config={theme:{extend:{}}};
-// ---------- Config (swap RATES for a live API on your own server) ----------
-const RATES={USD:1,KHR:4000,THB:33};            // reference rates per 1 USD
+
+const RATES={USD:1,KHR:4000,THB:33};         
 const SYM={USD:'$',KHR:'៛',THB:'฿'};
 const STEP={USD:1,KHR:100,THB:1};
 const state={cur:'USD',region:'All',type:'all',tier:'All',vibe:'All',trip:[]};
@@ -114,7 +114,6 @@ try{const s=localStorage.getItem('lr-cur');if(s&&RATES[s])state.cur=s}catch(e){}
 const $=s=>document.querySelector(s);
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
-// ---------- Currency state ----------
 function convert(usd,cur=state.cur){const v=usd*RATES[cur];return Math.round(v/STEP[cur])*STEP[cur]}
 function fmt(usd,cur=state.cur){const v=convert(usd,cur);return SYM[cur]+v.toLocaleString('en-US',{maximumFractionDigits:cur==='USD'?2:0,minimumFractionDigits:0})}
 const px=usd=>`<span class="px" data-usd="${usd}">${fmt(usd)}</span>`;
@@ -126,7 +125,6 @@ function renderCur(){
 }
 $('#cur').addEventListener('click',e=>{const b=e.target.closest('[data-cur]');if(b)setCur(b.dataset.cur)});
 
-// ---------- Data (all prices in USD) ----------
 const DEST=[
  {id:'siem',n:'Siem Reap',r:'Northwest',e:'🛕',g:'#e0745c,#7a3b4e',best:'Nov–Feb',tip:'Enter Angkor for sunrise, then rest at midday heat. 1-day pass $37.',usd:37,u:'Angkor 1-day pass'},
  {id:'pp',n:'Phnom Penh',r:'Central',e:'🏛',g:'#c79a52,#5a3d2a',best:'Nov–Mar',tip:'Visit the Royal Palace before 11am and dress covering shoulders and knees.',usd:10,u:'Palace ticket'},
@@ -150,7 +148,7 @@ const LIST=[
 const FARES=[['Tuk-tuk, short city ride',2,4],['Tuk-tuk to Angkor, full day',15,25],['Airport taxi (SAI)',15,18],['Bus Siem Reap–Phnom Penh',9,12],['Van Phnom Penh–Kampot',9,12],['Ferry to Koh Rong',15,20]];
 const CATALOG={};[...DEST.map(d=>({id:'d-'+d.id,n:d.n+' · '+d.u,cat:'Attractions',usd:d.usd})),...LIST.map(l=>({id:l.id,n:l.n,cat:l.t==='stay'?'Stays':'Food',usd:l.usd,u:l.u}))].forEach(x=>CATALOG[x.id]=x);
 
-// ---------- Trip builder ----------
+
 function addTrip(it){const ex=state.trip.find(x=>x.id===it.id);if(ex)ex.qty++;else state.trip.push({...it,qty:1});renderTrip();toast('Added: '+it.n)}
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),1800)}
 function renderTrip(){
@@ -166,7 +164,6 @@ $('#tripBtn').onclick=()=>$('#drawer').classList.remove('translate-x-full');
 $('#closeTrip').onclick=()=>$('#drawer').classList.add('translate-x-full');
 document.addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b&&CATALOG[b.dataset.add])addTrip(CATALOG[b.dataset.add])});
 
-// ---------- Highlights, destinations, listings ----------
 const bar=(a,key,list,id)=>$(id).innerHTML=list.map(x=>`<button class="chip" aria-pressed="${state[key]===x}" data-k="${key}" data-v="${x}">${x}</button>`).join('');
 // Photos: put files in /img named after each id (siem.jpg, pp.jpg, h1.jpg, f1.jpg ...) or point IMG_BASE at a CDN. Missing files fall back to the gradient.
 const IMG_BASE='img/';
@@ -187,10 +184,10 @@ function renderList(){
 document.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){state[b.dataset.k]=b.dataset.v;renderDest();renderList()}const j=e.target.closest('[data-jump]');if(j){state.region=j.dataset.jump;renderDest()}});
 $('#search').onsubmit=e=>{e.preventDefault();state.q=$('#q').value.trim().toLowerCase();state.type='all';state.tier='All';state.vibe='All';renderList();const hit=DEST.find(d=>state.q&&d.n.toLowerCase().includes(state.q));if(hit){state.region=hit.r;renderDest()}location.hash=hit?'go':'stay'};
 
-// ---------- Fares ----------
+
 $('#fares').innerHTML='<tr class="text-left" style="color:var(--mute)"><th class="py-1">Route</th><th>From</th><th>To</th></tr>'+FARES.map(f=>`<tr class="border-t" style="border-color:var(--line)"><td class="py-1.5">${f[0]}</td><td>${px(f[1])}</td><td>${px(f[2])}</td></tr>`).join('');
 
-// ---------- Transport booking forms ----------
+
 const APPS={pass:'https://www.passapp.com/',tada:'https://www.tada.global/'}; // replace with your verified deep links
 const f=(id,l,inp)=>`<div><label for="${id}">${l}</label>${inp}</div>`;
 const opts=a=>a.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
@@ -212,8 +209,7 @@ $('#panel').addEventListener('submit',e=>{
 });
 $('#panel').addEventListener('input',()=>{});
 
-// ---------- Init ----------
-// Live rates (free, no key). Works when this file is hosted on your own site; keeps reference rates if the request fails.
+
 async function loadRates(){
  try{
   const r=await fetch('https://open.er-api.com/v6/latest/USD');
