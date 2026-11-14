@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lotus Route – Cambodia travel planner</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<style>
+:root{color-scheme:dark;--bg:#070E20;--surface:#111B32;--surface2:#192642;--text:#F8FAFF;--muted:#A8B8D4;--accent:#E52341;--primary:#17489B;--primary-hover:#215AC0;--line:#273958;--r:14px;--card:var(--surface);--ink:var(--text);--mute:var(--muted);--paddy:var(--primary);--lotus:var(--accent);--sand:#F8FAFF;--deep:#070E20;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+header{background:rgba(7,14,32,.94);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--line);box-shadow:0 8px 30px rgba(0,0,0,.16)}
+header::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--primary),var(--accent),var(--primary))}
+.logo{font-weight:900;font-size:25px;letter-spacing:-1.1px;white-space:nowrap}
+.logo b{color:var(--accent)}
+@media (max-width:600px){.logo{font-size:19px;letter-spacing:-.7px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+html{scroll-padding-top:70px;scroll-behavior:smooth}
+body{margin:0;background:radial-gradient(ellipse at 50% 0%,rgba(23,72,155,.13),transparent 55%),var(--bg);color:var(--text);font:15px/1.6 "Segoe UI",Roboto,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-weight:850;letter-spacing:-.02em}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);transition:border-color .25s,box-shadow .25s}
+.card:hover{border-color:rgba(23,72,155,.8);box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:9px;padding:.5rem 1rem;font-size:.85rem;font-weight:650;cursor:pointer;color:var(--muted);transition:.25s}
+.chip:hover{border-color:var(--primary-hover);color:#fff;background:rgba(23,72,155,.2)}
+.chip[aria-pressed=true],.chip.on{background:var(--primary);color:#fff;border-color:var(--primary)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;background:var(--accent);color:#fff;border-radius:10px;padding:.7rem 1.3rem;font-weight:750;cursor:pointer;border:0;box-shadow:0 6px 22px rgba(229,35,65,.22);transition:background .25s,transform .25s,box-shadow .25s}
+.btn:hover{background:#F03450;transform:translateY(-2px);box-shadow:0 10px 30px rgba(229,35,65,.35)}
+.btn.alt{background:rgba(255,255,255,.11);color:#fff;border:1px solid rgba(255,255,255,.18);box-shadow:none;backdrop-filter:blur(10px)}
+.btn.alt:hover{background:rgba(23,72,155,.42)}
+.btn[disabled]{opacity:.6}
+input,select{background:rgba(255,255,255,.045);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:.6rem .8rem;width:100%;font:inherit;font-size:1rem;transition:.25s}
+input::placeholder{color:var(--muted)}
+input:focus,select:focus{outline:none;border-color:var(--primary-hover);box-shadow:0 0 0 3px rgba(23,72,155,.25);background:var(--surface)}
+select option{background:var(--surface);color:var(--text)}
+label{font-size:.8rem;color:var(--mute);display:block;margin-bottom:.2rem}
+:focus-visible{outline:2px solid #F8FAFF;outline-offset:3px}
+.hero{background:radial-gradient(circle at 82% 18%,rgba(229,35,65,.45),transparent 45%),linear-gradient(180deg,rgba(33,90,192,.7) 0%,rgba(23,72,155,.55) 35%,rgba(11,26,58,.88) 75%,#070E20 100%),url(img/angkor.jpg) center/cover #0b1a3a;color:#fff;position:relative;overflow:hidden;border-radius:0 0 22px 22px}
+.tab[aria-selected=true]{border-bottom:3px solid var(--lotus);font-weight:700}
+.scroll-x{overflow-x:auto;-webkit-overflow-scrolling:touch}
+</style>
+</head>
+<body>
+<header class="sticky top-0 z-40" style="color:#fff;padding-top:env(safe-area-inset-top,0px)">
+ <div class="max-w-6xl mx-auto px-3 py-2 flex items-center gap-2 justify-between">
+  <a href="#top" class="logo">Lotus<b>Route</b></a>
+  <div role="group" aria-label="Currency" class="flex rounded-full overflow-hidden" style="border:1px solid #ffffff55" id="cur"></div>
+  <button id="tripBtn" class="btn !py-1.5 !px-3 text-sm" aria-haspopup="dialog">Trip <span id="tripN">0</span></button>
+ </div>
+ <div class="text-center text-[11px] py-0.5" style="background:#080F22;color:var(--muted)" id="rateNote"></div>
+</header>
+
+<main id="top">
+<section class="hero">
+ <svg viewBox="0 0 400 120" class="absolute bottom-0 w-full" aria-hidden="true" preserveAspectRatio="xMidYMax slice"><path fill="#070E20" d="M0 120V92h120l8-6 4-26 4 26 6-30 6 30 6-44 6 44 6-30 6 30 4-26 4 26 8 6h60v28z"/><path fill="#111B32" opacity=".95" d="M0 104q50-14 100 0t100 0 100 0 100 0v16H0z"/></svg>
+ <div class="max-w-6xl mx-auto px-4 pt-10 pb-40 relative">
+  <h1 class="text-4xl sm:text-6xl font-extrabold leading-[1.05] max-w-2xl">From Angkor’s towers to Koh Rong’s tide.</h1>
+  <p class="mt-3 max-w-lg opacity-95">Plan stays, meals and rides in dollars, riel or baht. Build a trip and see what it costs.</p>
+  <form id="search" class="mt-6 flex gap-2 max-w-xl"><input id="q" aria-label="Search places, hotels, food" placeholder="Search Siem Reap, rooftop bar, amok…"><button class="btn">Search</button></form>
+  <div class="mt-4 flex flex-wrap gap-2">
+   <a class="chip" href="#go">📍 Where to go</a><a class="chip" href="#stay">🛏 Where to stay</a><a class="chip" href="#stay">🍜 Where to eat</a><a class="chip" href="#move">🛺 Transport</a>
+  </div>
+ </div>
+</section>
+
+<section class="max-w-6xl mx-auto px-4 -mt-24 relative">
+ <h2 class="sr-only">Top highlights</h2>
+ <div id="hi" class="grid grid-cols-2 lg:grid-cols-4 gap-3"></div>
+</section>
+
+<section id="go" class="max-w-6xl mx-auto px-4 pt-14">
+ <h2 class="text-3xl font-extrabold">Where to go</h2>
+ <div id="regionChips" class="mt-3 flex gap-2 flex-wrap"></div>
+ <div id="dest" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</section>
+
+<section id="stay" class="max-w-6xl mx-auto px-4 pt-14">
+ <h2 class="text-3xl font-extrabold">Where to sleep and eat</h2>
+ <div class="mt-3 flex gap-2 flex-wrap" id="typeChips"></div>
+ <div class="mt-2 flex gap-2 flex-wrap" id="tierChips"></div>
+ <div class="mt-2 flex gap-2 flex-wrap" id="vibeChips"></div>
+ <div id="list" class="mt-4 grid sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+</section>
+
+<section id="move" class="max-w-6xl mx-auto px-4 pt-14">
+ <h2 class="text-3xl font-extrabold">Getting around and booking</h2>
+ <div class="card mt-4 p-4">
+  <h3 class="font-bold">Typical fares</h3>
+  <div class="scroll-x mt-2"><table class="w-full text-sm min-w-[420px]" id="fares"></table></div>
+  <p class="text-xs mt-2" style="color:var(--mute)">Guide prices only. Agree the fare before you ride, and carry small riel notes.</p>
+ </div>
+ <div class="card mt-4 p-4">
+  <div role="tablist" class="flex gap-4 scroll-x border-b" style="border-color:var(--line)" id="tabs"></div>
+  <div id="panel" class="pt-4"></div>
+ </div>
+</section>
+</main>
+
+<footer class="max-w-6xl mx-auto px-4 py-10 text-xs" style="color:var(--mute)">Lotus Route is a prototype. Prices are indicative and rates are reference values, not live quotes. Bookings are not sent anywhere yet.</footer>
+
+<aside id="drawer" role="dialog" aria-label="Your trip" class="fixed top-0 right-0 h-full w-full max-w-sm z-50 translate-x-full transition-transform p-4 overflow-y-auto" style="background:var(--card);border-left:1px solid var(--line);padding-top:calc(env(safe-area-inset-top,0px) + 1rem)">
+ <div class="flex justify-between items-center"><h2 class="text-2xl font-extrabold">Your trip</h2><button class="btn alt" id="closeTrip">Close</button></div>
+ <div id="tripList" class="mt-4 space-y-2"></div>
+ <div id="tripSum" class="mt-4"></div>
+</aside>
+<div id="toast" class="fixed left-1/2 -translate-x-1/2 bottom-6 z-[60] px-4 py-2 rounded-full text-sm hidden" style="background:var(--surface2);color:#fff;border:1px solid var(--primary)" role="status"></div>
+
+<script>
+tailwind.config={theme:{extend:{}}};
+// ---------- Config (swap RATES for a live API on your own server) ----------
+const RATES={USD:1,KHR:4000,THB:33};            // reference rates per 1 USD
+const SYM={USD:'$',KHR:'៛',THB:'฿'};
+const STEP={USD:1,KHR:100,THB:1};
+const state={cur:'USD',region:'All',type:'all',tier:'All',vibe:'All',trip:[]};
+try{const s=localStorage.getItem('lr-cur');if(s&&RATES[s])state.cur=s}catch(e){}
+const $=s=>document.querySelector(s);
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+// ---------- Currency state ----------
+function convert(usd,cur=state.cur){const v=usd*RATES[cur];return Math.round(v/STEP[cur])*STEP[cur]}
+function fmt(usd,cur=state.cur){const v=convert(usd,cur);return SYM[cur]+v.toLocaleString('en-US',{maximumFractionDigits:cur==='USD'?2:0,minimumFractionDigits:0})}
+const px=usd=>`<span class="px" data-usd="${usd}">${fmt(usd)}</span>`;
+function setCur(c){state.cur=c;try{localStorage.setItem('lr-cur',c)}catch(e){}renderCur();refreshPrices()}
+function refreshPrices(){document.querySelectorAll('.px').forEach(e=>e.textContent=fmt(+e.dataset.usd));renderTrip()}
+function renderCur(){
+ $('#cur').innerHTML=Object.keys(RATES).map(c=>`<button class="px-3 py-1 text-sm font-bold" aria-pressed="${c===state.cur}" data-cur="${c}" style="${c===state.cur?'background:#E52341;color:#fff':'color:#A8B8D4'}">${SYM[c]} ${c}</button>`).join('');
+ $('#rateNote').textContent=`${state.live?'Live rate':'Reference rate'}: $1 = ៛${Math.round(RATES.KHR).toLocaleString()} = ฿${RATES.THB.toLocaleString('en-US',{maximumFractionDigits:2})}`;
+}
+$('#cur').addEventListener('click',e=>{const b=e.target.closest('[data-cur]');if(b)setCur(b.dataset.cur)});
+
+// ---------- Data (all prices in USD) ----------
+const DEST=[
+ {id:'siem',n:'Siem Reap',r:'Northwest',e:'🛕',g:'#e0745c,#7a3b4e',best:'Nov–Feb',tip:'Enter Angkor for sunrise, then rest at midday heat. 1-day pass $37.',usd:37,u:'Angkor 1-day pass'},
+ {id:'pp',n:'Phnom Penh',r:'Central',e:'🏛',g:'#c79a52,#5a3d2a',best:'Nov–Mar',tip:'Visit the Royal Palace before 11am and dress covering shoulders and knees.',usd:10,u:'Palace ticket'},
+ {id:'kampot',n:'Kampot',r:'South',e:'🌶',g:'#6fae8a,#1f4d3d',best:'Dec–Apr',tip:'Take a sunset river cruise and book a pepper-farm tour by tuk-tuk.',usd:8,u:'River cruise'},
+ {id:'rong',n:'Koh Rong',r:'Islands',e:'🏝',g:'#46c1c9,#0f4b57',best:'Nov–Apr',tip:'Ferries from Sihanoukville run morning to mid-afternoon. Seas get rough June–Sep.',usd:20,u:'Ferry return'},
+ {id:'battam',n:'Battambang',r:'Northwest',e:'🚂',g:'#d9a441,#6b4a1e',best:'Nov–Feb',tip:'Join the evening bat-cave watch at Phnom Sampov, then ride the bamboo train.',usd:5,u:'Bamboo train'},
+ {id:'mond',n:'Mondulkiri',r:'East',e:'🐘',g:'#8ccf7a,#2a5a3a',best:'Nov–Apr',tip:'Choose an ethical elephant sanctuary and pack a light jacket for cool nights.',usd:45,u:'Sanctuary day'}];
+const LIST=[
+ {id:'h1',t:'stay',n:'Mad Monkey Hostel',c:'Siem Reap',tier:'Backpacker',v:'Social',usd:7,u:'night'},
+ {id:'h2',t:'stay',n:'Rice Fields Eco-lodge',c:'Kampot',tier:'Mid-range',v:'Eco-lodge',usd:45,u:'night'},
+ {id:'h3',t:'stay',n:'Riverside Rooftop Hotel',c:'Phnom Penh',tier:'Mid-range',v:'Rooftop bar',usd:60,u:'night'},
+ {id:'h4',t:'stay',n:'Temple Gate Resort & Spa',c:'Siem Reap',tier:'Luxury',v:'Rooftop bar',usd:210,u:'night'},
+ {id:'h5',t:'stay',n:'Bamboo Beach Bungalows',c:'Koh Rong',tier:'Backpacker',v:'Eco-lodge',usd:18,u:'night'},
+ {id:'h6',t:'stay',n:'Jungle Villa Retreat',c:'Koh Rong',tier:'Luxury',v:'Eco-lodge',usd:180,u:'night'},
+ {id:'f1',t:'eat',n:'Amok Corner',c:'Siem Reap',tier:'Backpacker',v:'Authentic Khmer',usd:4,u:'meal'},
+ {id:'f2',t:'eat',n:'Skyline Sunset Bar',c:'Phnom Penh',tier:'Mid-range',v:'Rooftop bar',usd:14,u:'meal'},
+ {id:'f3',t:'eat',n:'Kampot Crab Shack',c:'Kampot',tier:'Mid-range',v:'Authentic Khmer',usd:12,u:'meal'},
+ {id:'f4',t:'eat',n:'Royal Khmer Table',c:'Phnom Penh',tier:'Luxury',v:'Authentic Khmer',usd:45,u:'tasting menu'},
+ {id:'f5',t:'eat',n:'Night Market Noodles',c:'Siem Reap',tier:'Backpacker',v:'Street food',usd:2.5,u:'meal'},
+ {id:'f6',t:'eat',n:'Treetop Rooftop Lounge',c:'Siem Reap',tier:'Luxury',v:'Rooftop bar',usd:30,u:'dinner'}];
+const FARES=[['Tuk-tuk, short city ride',2,4],['Tuk-tuk to Angkor, full day',15,25],['Airport taxi (SAI)',15,18],['Bus Siem Reap–Phnom Penh',9,12],['Van Phnom Penh–Kampot',9,12],['Ferry to Koh Rong',15,20]];
+const CATALOG={};[...DEST.map(d=>({id:'d-'+d.id,n:d.n+' · '+d.u,cat:'Attractions',usd:d.usd})),...LIST.map(l=>({id:l.id,n:l.n,cat:l.t==='stay'?'Stays':'Food',usd:l.usd,u:l.u}))].forEach(x=>CATALOG[x.id]=x);
+
+// ---------- Trip builder ----------
+function addTrip(it){const ex=state.trip.find(x=>x.id===it.id);if(ex)ex.qty++;else state.trip.push({...it,qty:1});renderTrip();toast('Added: '+it.n)}
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.remove('hidden');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.add('hidden'),1800)}
+function renderTrip(){
+ $('#tripN').textContent=state.trip.reduce((a,b)=>a+b.qty,0);
+ if(!state.trip.length){$('#tripList').innerHTML='<p style="color:var(--mute)">Nothing yet. Tap “Add to trip” on any place, hotel or ride.</p>';$('#tripSum').innerHTML='';return}
+ $('#tripList').innerHTML=state.trip.map((x,i)=>`<div class="card p-3 flex items-center gap-2"><div class="flex-1"><div class="font-bold text-sm">${esc(x.n)}</div><div class="text-xs" style="color:var(--mute)">${fmt(x.usd)} each</div></div><button class="chip" data-q="${i}:-1" aria-label="Fewer">−</button><span>${x.qty}</span><button class="chip" data-q="${i}:1" aria-label="More">+</button></div>`).join('');
+ const by={};state.trip.forEach(x=>by[x.cat]=(by[x.cat]||0)+x.usd*x.qty);
+ const tot=Object.values(by).reduce((a,b)=>a+b,0);
+ $('#tripSum').innerHTML=Object.entries(by).map(([k,v])=>`<div class="flex justify-between text-sm py-1"><span>${k}</span><span>${fmt(v)}</span></div>`).join('')+`<div class="flex justify-between font-extrabold text-lg pt-2 mt-2 border-t" style="border-color:var(--line)"><span>Estimated total</span><span>${fmt(tot)}</span></div><p class="text-xs mt-1" style="color:var(--mute)">≈ ${fmt(tot,'USD')} · ${fmt(tot,'KHR')} · ${fmt(tot,'THB')}</p>`;
+}
+$('#tripList').addEventListener('click',e=>{const b=e.target.closest('[data-q]');if(!b)return;const[i,d]=b.dataset.q.split(':').map(Number);state.trip[i].qty+=d;if(state.trip[i].qty<1)state.trip.splice(i,1);renderTrip()});
+$('#tripBtn').onclick=()=>$('#drawer').classList.remove('translate-x-full');
+$('#closeTrip').onclick=()=>$('#drawer').classList.add('translate-x-full');
+document.addEventListener('click',e=>{const b=e.target.closest('[data-add]');if(b&&CATALOG[b.dataset.add])addTrip(CATALOG[b.dataset.add])});
+
+// ---------- Highlights, destinations, listings ----------
+const bar=(a,key,list,id)=>$(id).innerHTML=list.map(x=>`<button class="chip" aria-pressed="${state[key]===x}" data-k="${key}" data-v="${x}">${x}</button>`).join('');
+// Photos: put files in /img named after each id (siem.jpg, pp.jpg, h1.jpg, f1.jpg ...) or point IMG_BASE at a CDN. Missing files fall back to the gradient.
+const IMG_BASE='img/';
+const pic=id=>`<img src="${IMG_BASE}${id}.jpg" alt="" loading="lazy" class="absolute inset-0 w-full h-full object-cover" onerror="this.nextElementSibling.remove();this.remove()"><span class="absolute inset-0" style="background:linear-gradient(0deg,rgba(7,14,32,.8),rgba(7,14,32,.1))"></span>`;
+function renderHi(){$('#hi').innerHTML=DEST.slice(0,4).map(d=>`<a href="#go" class="rounded-2xl p-4 pt-10 text-white block shadow relative overflow-hidden" style="background:linear-gradient(160deg,${d.g})" data-jump="${d.r}">${pic(d.id)}<div class="relative text-3xl" aria-hidden="true">${d.e}</div><div class="relative font-bold text-lg mt-2">${d.n}</div><div class="relative text-xs opacity-90">Best ${d.best}</div></a>`).join('')}
+function renderDest(){
+ bar(0,'region',['All',...new Set(DEST.map(d=>d.r))],'#regionChips');
+ $('#dest').innerHTML=DEST.filter(d=>state.region==='All'||d.r===state.region).map(d=>`<article class="card overflow-hidden"><div class="h-36 relative flex items-end p-3 text-white" style="background:linear-gradient(160deg,${d.g})">${pic(d.id)}<span class="relative text-4xl mr-2" aria-hidden="true">${d.e}</span><h3 class="relative text-xl font-extrabold">${d.n}</h3></div><div class="p-3 text-sm"><p><b>Best time:</b> ${d.best}</p><p class="mt-1" style="color:var(--mute)">${d.tip}</p><div class="mt-3 flex items-center justify-between"><span>${d.u}: <b>${px(d.usd)}</b></span><button class="btn !py-1.5 text-sm" data-add="d-${d.id}">Add to trip</button></div></div></article>`).join('');
+}
+function renderList(){
+ bar(0,'type',['all','stay','eat'],'#typeChips');
+ document.querySelectorAll('#typeChips .chip').forEach(c=>c.textContent={all:'Stay & eat',stay:'Stay',eat:'Eat'}[c.dataset.v]);
+ bar(0,'tier',['All','Backpacker','Mid-range','Luxury'],'#tierChips');
+ bar(0,'vibe',['All','Eco-lodge','Rooftop bar','Authentic Khmer'],'#vibeChips');
+ const L=LIST.filter(l=>(state.type==='all'||l.t===state.type)&&(state.tier==='All'||l.tier===state.tier)&&(state.vibe==='All'||l.v===state.vibe)&&(!state.q||(l.n+l.c+l.v).toLowerCase().includes(state.q)));
+ $('#list').innerHTML=L.length?L.map(l=>`<article class="card p-4"><div class="relative h-28 -mx-4 -mt-4 mb-3 overflow-hidden grid place-items-center text-4xl" style="background:linear-gradient(160deg,#17489B,#192642);border-radius:13px 13px 0 0"><span aria-hidden="true">${l.t==='stay'?'🛏':'🍜'}</span>${pic(l.id)}</div><div class="flex justify-between gap-2"><h3 class="font-bold">${l.t==='stay'?'🛏':'🍜'} ${l.n}</h3><span class="text-xs rounded-full px-2 py-0.5 h-fit" style="background:var(--bg)">${l.tier}</span></div><p class="text-sm" style="color:var(--mute)">${l.c} · ${l.v}</p><div class="mt-3 flex items-center justify-between"><span><b class="text-lg">${px(l.usd)}</b> <span class="text-xs" style="color:var(--mute)">/ ${l.u}</span></span><button class="btn !py-1.5 text-sm" data-add="${l.id}">Add to trip</button></div></article>`).join(''):'<p style="color:var(--mute)">No matches. Clear a filter to see more places.</p>';
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-k]');if(b){state[b.dataset.k]=b.dataset.v;renderDest();renderList()}const j=e.target.closest('[data-jump]');if(j){state.region=j.dataset.jump;renderDest()}});
+$('#search').onsubmit=e=>{e.preventDefault();state.q=$('#q').value.trim().toLowerCase();state.type='all';state.tier='All';state.vibe='All';renderList();const hit=DEST.find(d=>state.q&&d.n.toLowerCase().includes(state.q));if(hit){state.region=hit.r;renderDest()}location.hash=hit?'go':'stay'};
+
+// ---------- Fares ----------
+$('#fares').innerHTML='<tr class="text-left" style="color:var(--mute)"><th class="py-1">Route</th><th>From</th><th>To</th></tr>'+FARES.map(f=>`<tr class="border-t" style="border-color:var(--line)"><td class="py-1.5">${f[0]}</td><td>${px(f[1])}</td><td>${px(f[2])}</td></tr>`).join('');
+
+// ---------- Transport booking forms ----------
+const APPS={pass:'https://www.passapp.com/',tada:'https://www.tada.global/'}; // replace with your verified deep links
+const f=(id,l,inp)=>`<div><label for="${id}">${l}</label>${inp}</div>`;
+const opts=a=>a.map(x=>`<option value="${x[0]}">${x[1]}</option>`).join('');
+const today=new Date().toISOString().slice(0,10);
+const FORMS={
+ tuk:{t:'City ride',html:()=>`<p class="text-sm mb-3" style="color:var(--mute)">Open a ride app, or pre-agree a fare with a local tuk-tuk.</p><div class="grid sm:grid-cols-2 gap-3">${f('tp','Pickup','<input id="tp" placeholder="Hotel or landmark">')}${f('td','Drop-off','<input id="td" placeholder="Where to?">')}</div><div class="mt-3 flex flex-wrap gap-2"><a class="btn" target="_blank" rel="noopener" href="${APPS.pass}">Open PassApp</a><a class="btn alt" target="_blank" rel="noopener" href="${APPS.tada}">Open TADA</a></div>`},
+ air:{t:'Airport transfer',price:()=>({tuk:12,sedan:15,van:25}[$('#av').value]),html:()=>`<form class="grid sm:grid-cols-2 gap-3">${f('ad','Direction','<select id="adir">'+opts([['to','Airport to hotel'],['from','Hotel to airport']])+'</select>')}${f('av','Vehicle','<select id="av">'+opts([['tuk','Tuk-tuk (1–3)'],['sedan','Sedan (1–3)'],['van','Van (up to 8)']])+'</select>')}${f('adt','Date',`<input id="adt" type="date" min="${today}" required>`)}${f('atm','Flight or pickup time','<input id="atm" type="time" required>')}${f('ah','Hotel name and address','<input id="ah" required>')}${f('an','Name and phone/WhatsApp','<input id="an" required>')}<div class="sm:col-span-2"><button class="btn w-full">Get fixed price</button></div></form>`},
+ tour:{t:'Angkor tour',price:()=>({tuk:20,car:35,van:55}[$('#tv').value])+($('#tg').value==='yes'?30:0),html:()=>`<form class="grid sm:grid-cols-2 gap-3">${f('tv','Vehicle','<select id="tv">'+opts([['tuk','Tuk-tuk driver'],['car','Car with driver'],['van','Minivan']])+'</select>')}${f('tg','English-speaking guide','<select id="tg">'+opts([['no','No guide'],['yes','Add guide (+$30)']])+'</select>')}${f('tdt','Date',`<input id="tdt" type="date" min="${today}" required>`)}${f('tr','Route','<select id="tr">'+opts([['s','Sunrise + small circuit'],['g','Grand circuit'],['b','Banteay Srei + Beng Mealea']])+'</select>')}${f('tn','Name and phone/WhatsApp','<input id="tn" required>')}${f('tq','Driver requests','<input id="tq" placeholder="e.g. 5am start, cold water">')}<div class="sm:col-span-2"><button class="btn w-full">Request driver</button></div></form>`},
+ bus:{t:'Intercity',price:()=>{const r=ROUTES[$('#br').value];return($('#bt').value==='van'?r[2]:r[1])*$('#bp').value},html:()=>`<form class="grid sm:grid-cols-2 gap-3">${f('br','Route','<select id="br">'+ROUTES.map((r,i)=>`<option value="${i}">${r[0]}</option>`).join('')+'</select>')}${f('bt','Vehicle','<select id="bt">'+opts([['bus','Bus (cheaper)'],['van','Minivan (faster)']])+'</select>')}${f('bd','Date',`<input id="bd" type="date" min="${today}" required>`)}${f('bp','Passengers','<input id="bp" type="number" min="1" max="9" value="1">')}${f('bn','Name and email','<input id="bn" required>')}<div class="sm:col-span-2"><button class="btn w-full">See price and request seats</button></div></form>`}};
+const ROUTES=[['Siem Reap → Phnom Penh',9,14],['Phnom Penh → Kampot',7,11],['Phnom Penh → Sihanoukville',8,12],['Siem Reap → Battambang',6,9]];
+let tab='tuk';
+function renderTabs(){$('#tabs').innerHTML=Object.entries(FORMS).map(([k,v])=>`<button role="tab" class="tab py-2 whitespace-nowrap" aria-selected="${k===tab}" data-tab="${k}">${v.t}</button>`).join('');$('#panel').innerHTML=FORMS[tab].html()+'<div id="quote" class="mt-4"></div>'}
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(b){tab=b.dataset.tab;renderTabs()}});
+$('#panel').addEventListener('submit',e=>{
+ e.preventDefault();const F=FORMS[tab],usd=F.price();
+ const id='tr-'+tab+'-'+Date.now(),label=F.t+': '+[...e.target.querySelectorAll('select')].map(s=>s.selectedOptions[0].text).join(', ');
+ CATALOG[id]={id,n:label,cat:'Transport',usd};
+ $('#quote').innerHTML=`<div class="card p-4" style="border-color:var(--paddy)"><b>Fixed price: <span class="text-xl">${px(usd)}</span></b><p class="text-sm mt-1" style="color:var(--mute)">${fmt(usd,'USD')} · ${fmt(usd,'KHR')} · ${fmt(usd,'THB')}. We would confirm by message; nothing has been sent yet.</p><button type="button" class="btn mt-3" data-add="${id}">Add to trip</button></div>`;
+});
+$('#panel').addEventListener('input',()=>{});
+
+// ---------- Init ----------
+// Live rates (free, no key). Works when this file is hosted on your own site; keeps reference rates if the request fails.
+async function loadRates(){
+ try{
+  const r=await fetch('https://open.er-api.com/v6/latest/USD');
+  const d=await r.json();
+  if(d.result==='success'&&d.rates.KHR&&d.rates.THB){RATES.KHR=d.rates.KHR;RATES.THB=d.rates.THB;state.live=true;renderCur();refreshPrices()}
+ }catch(e){}
+}
+renderCur();renderHi();renderDest();renderList();renderTabs();renderTrip();loadRates();
+</script>
+</body>
+</html>
