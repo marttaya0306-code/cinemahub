@@ -1,486 +1,425 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Discover Cambodia – Kingdom of Wonder | Lotus Route</title>
-<meta name="description" content="Your guide to Cambodia: Angkor Wat, Phnom Penh, Kampot, Koh Rong and more. Live weather, currency converter, visas, getting around, food and festivals.">
-<meta property="og:type" content="website"><meta property="og:title" content="Discover Cambodia – Kingdom of Wonder"><meta property="og:description" content="Temples, rivers, islands and street food. Plan your Cambodia trip with Lotus Route.">
-<meta property="og:image" content="https://lotusroute.example/og.jpg"><meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#0a1128">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230a1128'/%3E%3Cpath d='M32 12c6 8 6 20 0 30-6-10-6-22 0-30zM14 28c10 0 18 6 18 16-10 0-18-6-18-16zm36 0c0 10-8 16-18 16 0-10 8-16 18-16z' fill='%23e8b84b'/%3E%3C/svg%3E">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TouristDestination","name":"Cambodia","description":"Kingdom of Wonder: Angkor, Mekong river towns, highlands and Gulf of Thailand islands.","touristType":["Culture","Nature","Beach","Food"],"geo":{"@type":"GeoCoordinates","latitude":12.5657,"longitude":104.991},"containsPlace":[{"@type":"TouristAttraction","name":"Angkor Wat"},{"@type":"City","name":"Phnom Penh"},{"@type":"City","name":"Kampot"}]}</script>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--navy:#0a1128;--navy2:#111b3a;--red:#b50e2a;--gold:#e8b84b;--ink:#141a33;--mute:#4b5573;--bg:#f6f7fb;--line:#dde1ee}
-*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:80px}
-body{margin:0;font:400 17px/1.65 Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg)}
-h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.1;margin:0}
-a{color:inherit}:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.skip{position:absolute;left:8px;top:-60px;background:var(--gold);padding:10px 14px;border-radius:8px;z-index:99}.skip:focus{top:8px}
-.wrap{max-width:1180px;margin:auto;padding:0 20px}
-/* header */
-header{position:sticky;top:0;z-index:30;background:var(--navy);color:#fff;border-bottom:3px solid var(--red)}
-.bar{display:flex;align-items:center;gap:8px;min-height:68px}
-.logo{font:800 24px Fraunces,serif;color:var(--gold);text-decoration:none;margin-right:auto;display:flex;gap:8px;align-items:center}
-nav ul{list-style:none;margin:0;padding:0;display:flex;gap:2px}
-nav li{position:relative}
-nav a,nav button{min-height:44px;display:flex;align-items:center;padding:0 14px;background:none;border:0;color:#fff;font:500 15px Inter;text-decoration:none;cursor:pointer;border-radius:8px}
-nav a:hover,nav button:hover{background:var(--navy2);color:var(--gold)}
-.dd{display:none;position:absolute;top:100%;left:0;min-width:220px;background:var(--navy2);border:1px solid #243158;border-radius:12px;padding:8px;box-shadow:0 18px 40px rgba(0,0,0,.4);flex-direction:column}
-li.open>.dd,li:hover>.dd{display:flex}
-.burger{display:none;min-width:44px;min-height:44px;background:none;border:1px solid #33427a;border-radius:8px;color:#fff;font-size:20px}
-@media(max-width:900px){.burger{display:block}nav{display:none;position:absolute;top:100%;left:0;right:0;background:var(--navy);padding:8px 16px 16px;max-height:80vh;overflow:auto}nav.on{display:block}nav ul{flex-direction:column}.dd{position:static;display:flex;box-shadow:none;border:0;padding:0 0 0 14px;background:none}}
-/* hero */
-.hero{background:radial-gradient(900px 400px at 85% 0,rgba(181,14,42,.45),transparent),linear-gradient(160deg,#0a1128 40%,#1a2556);color:#fff;padding:88px 0 72px}
-.hero h1{font-size:clamp(2.6rem,7vw,5.2rem);font-weight:800;max-width:12ch}
-.hero .k{color:var(--gold);font:600 1.1rem Inter;margin:0 0 14px}
-.hero p.lead{max-width:60ch;color:#d3daf0;font-size:1.12rem;margin:22px 0 0}
-.quick{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-top:40px}
-.quick a{display:flex;align-items:center;min-height:56px;padding:12px 16px;border:1px solid #33427a;border-radius:12px;text-decoration:none;background:rgba(255,255,255,.05);transition:background .2s,border-color .2s}
-.quick a:hover{background:rgba(232,184,75,.14);border-color:var(--gold)}
-/* sections */
-section{padding:64px 0}.alt{background:#fff;border-block:1px solid var(--line)}
-h2{font-size:clamp(1.8rem,4vw,2.6rem)}.sub{color:var(--mute);max-width:62ch;margin:12px 0 28px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px}
-.chip{min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font:500 15px Inter;color:var(--ink)}
-.chip[aria-pressed=true]{background:var(--navy);color:#fff;border-color:var(--navy)}
-.grid{display:grid;gap:22px;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
-.card{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
-.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(10,17,40,.12)}
-.ph{aspect-ratio:4/3;position:relative;overflow:hidden;background:#e4e8f4}
-.ph img{width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .6s}.ph img.in{opacity:1}
-.sk{background:linear-gradient(100deg,#e4e8f4 30%,#f4f6fc 50%,#e4e8f4 70%) 0/200% 100%;animation:sh 1.3s linear infinite}
-@keyframes sh{to{background-position:-200% 0}}
-.ph.fb{background:linear-gradient(135deg,hsl(var(--h) 55% 26%),#0a1128);animation:none}
-.ph.fb svg{position:absolute;inset:0;margin:auto;width:38%;opacity:.75}
-.tag{position:absolute;left:12px;top:12px;background:var(--gold);color:#111;font:600 13px Inter;padding:3px 10px;border-radius:999px}
-.wbadge{position:absolute;right:12px;top:12px;background:rgba(10,17,40,.84);color:#fff;font:600 13px Inter;padding:3px 10px;border-radius:999px;backdrop-filter:blur(4px)}
-.cb{padding:18px;display:flex;flex-direction:column;gap:8px;flex:1}.cb h3{font-size:1.35rem}.cb p{margin:0;color:var(--mute);font-size:.97rem}
-.btn{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 20px;border-radius:10px;background:var(--red);color:#fff;font-weight:600;text-decoration:none;border:0;cursor:pointer;font-size:16px}
-.btn:hover{background:#8f0b21}.btn.sec{background:var(--navy)}.btn.sec:hover{background:var(--navy2)}
-.cb .actions{margin-top:auto;display:flex;flex-wrap:wrap;gap:8px;padding-top:6px}
-/* live hub */
-.hub{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(300px,1fr))}
-.widget{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;gap:14px}
-.widget h3{font-size:1.35rem;display:flex;align-items:center;justify-content:space-between;gap:8px}
-.pill{font:600 12px Inter;background:#eef1f9;color:var(--navy);padding:4px 10px;border-radius:999px}
-.kv{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.kv div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
-.kv small{display:block;color:var(--mute);font-size:.8rem}
-.kv strong{font-size:1.05rem;color:var(--ink)}
-.wctrl{display:flex;gap:8px;flex-wrap:wrap}
-.wctrl select,.wctrl input{min-height:42px;padding:0 12px;border-radius:10px;border:1px solid var(--line);background:#fff;font:inherit;color:var(--ink)}
-.wctrl input{flex:1;min-width:110px}
-.fc{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;text-align:center}
-.fc div{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:8px 4px;font-size:.85rem}
-.fc strong{display:block;margin-top:2px}
-.conv-out{background:var(--navy);color:#fff;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
-.conv-out strong{font:700 1.45rem Fraunces,serif;color:var(--gold)}
-/* info tabs */
-.tabs{display:flex;flex-wrap:wrap;gap:6px;border-bottom:2px solid var(--line);margin-bottom:24px}
-.tabs button{min-height:48px;padding:0 20px;background:none;border:0;border-bottom:4px solid transparent;margin-bottom:-2px;font:600 16px Inter;color:var(--mute);cursor:pointer}
-.tabs button[aria-selected=true]{color:var(--red);border-color:var(--red)}
-.panel{max-width:78ch}.panel ul{padding-left:20px}.panel li{margin:6px 0}
-/* experience */
-.exp{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
-.exp div{border-radius:16px;padding:28px 22px;color:#fff;min-height:210px;display:flex;flex-direction:column;justify-content:flex-end}
-.exp h3{font-size:1.5rem;margin-bottom:6px}.exp p{margin:0;font-size:.97rem}
-.e1{background:linear-gradient(160deg,#7a1224,#0a1128)}.e2{background:linear-gradient(160deg,#0f5d73,#0a1128)}.e3{background:linear-gradient(160deg,#7a5a10,#0a1128)}.e4{background:linear-gradient(160deg,#1b6a45,#0a1128)}
-/* faq + form */
-details{background:#fff;border:1px solid var(--line);border-radius:12px;margin:10px 0;max-width:80ch}
-summary{min-height:52px;padding:12px 18px;cursor:pointer;font-weight:600;display:flex;align-items:center}
-details p{margin:0;padding:0 18px 16px;color:var(--mute)}
-.news{background:var(--navy);color:#fff}.news form{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
-.news input{flex:1;min-width:240px;min-height:48px;padding:0 14px;border-radius:10px;border:1px solid #33427a;background:var(--navy2);color:#fff;font:inherit}
-footer{background:#070c1e;color:#b8c1de;padding:48px 0 28px;font-size:.95rem}
-footer .g{display:grid;gap:32px;grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
-footer h3{color:#fff;font-size:1.05rem;margin-bottom:10px}footer ul{list-style:none;padding:0;margin:0}footer li{margin:4px 0}footer a{display:inline-block;padding:6px 0;text-decoration:none}footer a:hover{color:var(--gold)}
-#ok{color:var(--gold);min-height:1.5em;margin-top:10px}
-.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
-/* modal */
-dialog{border:0;border-radius:18px;max-width:760px;width:calc(100% - 24px);padding:0;box-shadow:0 24px 60px rgba(0,0,0,.45);background:#fff;color:var(--ink)}
-dialog::backdrop{background:rgba(10,17,40,.65);backdrop-filter:blur(3px)}
-.mhead{display:flex;align-items:center;justify-content:space-between;padding:18px 22px;background:var(--navy);color:#fff}
-.mhead h3{font-size:1.5rem;color:var(--gold)}
-.mclose{min-width:44px;min-height:44px;border-radius:10px;border:1px solid #33427a;background:var(--navy2);color:#fff;font-size:20px;cursor:pointer}
-.mbody{padding:22px;display:flex;flex-direction:column;gap:16px;max-height:78vh;overflow:auto}
-.mbody iframe{width:100%;height:260px;border:1px solid var(--line);border-radius:12px}
-.nearby{display:flex;flex-wrap:wrap;gap:8px}
-.nearby a{padding:6px 12px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:.9rem;text-decoration:none}
-.nearby a:hover{border-color:var(--red);color:var(--red)}
-@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NightReel Gaming Portal</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0f19',
+                        cardBg: '#131c2e',
+                        cardHover: '#1e293b',
+                        neonGreen: '#10b981',
+                        neonHover: '#059669',
+                        accentGold: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    </style>
 </head>
-<body>
-<a class="skip" href="#destinations">Skip to content</a>
-<header><div class="wrap bar">
-  <a class="logo" href="#top" aria-label="Lotus Route home"><svg width="30" height="30" viewBox="0 0 64 64" aria-hidden="true"><path d="M32 12c6 8 6 20 0 30-6-10-6-22 0-30zM14 28c10 0 18 6 18 16-10 0-18-6-18-16zm36 0c0 10-8 16-18 16 0-10 8-16 18-16z" fill="#e8b84b"/></svg>Lotus Route</a>
-  <button class="burger" id="burger" aria-expanded="false" aria-controls="nav" aria-label="Menu">☰</button>
-  <nav id="nav" aria-label="Main"><ul>
-    <li><button aria-expanded="false" aria-haspopup="true">Destinations ▾</button><div class="dd" id="ddList"></div></li>
-    <li><button aria-expanded="false" aria-haspopup="true">Explore Cambodia ▾</button><div class="dd"><a href="#live">Live travel tools</a><a href="#info">General information</a><a href="#info" data-tab="visa">Visa &amp; entry</a><a href="#food">Khmer food</a><a href="#festivals">Events &amp; festivals</a><a href="#faq">FAQs</a></div></li>
-    <li><a href="#experience">Experiences</a></li>
-    <li><a href="#live">Live tools</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ul></nav>
-</div></header>
+<body class="bg-darkBg text-slate-100 min-h-screen flex flex-col justify-between selection:bg-neonGreen selection:text-black">
 
-<main id="top">
-<div class="hero"><div class="wrap">
-  <p class="k">Kingdom of Wonder</p>
-  <h1>Discover Cambodia</h1>
-  <p class="lead">Sunrise over the temples of Angkor, sunset on the Mekong, island hopping in the Gulf of Thailand and a night market in every town. Cambodia packs more variety into a small map than almost anywhere in Southeast Asia, and it is easy to travel.</p>
-  <div class="quick"><a href="#info" data-tab="get">How to get there</a><a href="#info" data-tab="when">When to go</a><a href="#info" data-tab="around">Getting around</a><a href="#info" data-tab="visa">Visa &amp; entry</a><a href="#live">Live weather &amp; currency</a></div>
-</div></div>
+    <!-- TOP NAVBAR -->
+    <header class="sticky top-0 z-50 bg-darkBg/95 backdrop-blur border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <!-- Left: Logo & Menu -->
+            <div class="flex items-center space-x-6">
+                <button class="md:hidden text-slate-400 hover:text-white focus:outline-none" onclick="toggleMobileMenu()">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2 cursor-pointer">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-black font-black text-xl">
+                        <i class="fa-solid fa-ghost"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-wider bg-gradient-to-r from-emerald-400 to-teal-200 bg-clip-text text-transparent">NIGHTREEL</span>
+                </div>
+                <nav class="hidden md:flex space-x-1 text-sm font-medium">
+                    <a href="#" class="px-3 py-2 rounded-lg text-emerald-400 bg-slate-800/60 transition"><i class="fa-solid fa-dice mr-1.5"></i> Slots</a>
+                    <a href="#" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/40 transition"><i class="fa-solid fa-video mr-1.5"></i> Live Casino</a>
+                    <a href="#" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/40 transition"><i class="fa-solid fa-futbol mr-1.5"></i> Sports</a>
+                    <a href="#" class="px-3 py-2 rounded-lg text-slate-300 hover:text-white hover:bg-slate-800/40 transition"><i class="fa-solid fa-fish mr-1.5"></i> Fishing</a>
+                </nav>
+            </div>
 
-<section id="live" class="alt"><div class="wrap">
-  <h2>Live Cambodia travel hub</h2>
-  <p class="sub">Real-time weather, Angkor sunrise times, air quality, coastal sea state, country facts and exchange rates powered by open APIs.</p>
-  <div class="hub">
-    <article class="widget" aria-labelledby="w-weather">
-      <h3 id="w-weather">Weather &amp; Sunrise <span class="pill">Open-Meteo</span></h3>
-      <div class="wctrl">
-        <label class="sr" for="wCity">Choose destination</label>
-        <select id="wCity"></select>
-      </div>
-      <div id="wBox"><p style="color:var(--mute)">Loading live forecast…</p></div>
-    </article>
+            <!-- Right: Balance & Auth Actions -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex flex-col items-end bg-cardBg border border-slate-800 px-3 py-1 rounded-xl">
+                    <span class="text-xs text-slate-400">Balance</span>
+                    <span id="user-balance" class="font-bold text-emerald-400 text-sm">$AUD 1,250.00</span>
+                </div>
+                <button onclick="openModal('depositModal')" class="bg-neonGreen hover:bg-neonHover text-black font-bold px-4 py-2 rounded-xl text-sm transition shadow-lg shadow-emerald-600/20 flex items-center">
+                    <i class="fa-solid fa-wallet mr-1.5"></i> Deposit
+                </button>
+                <button onclick="openModal('authModal')" class="bg-slate-800 hover:bg-slate-700 text-white font-medium px-4 py-2 rounded-xl text-sm border border-slate-700 transition hidden sm:inline-block">
+                    Login
+                </button>
+            </div>
+        </div>
+        <!-- Mobile Dropdown Navigation -->
+        <div id="mobileMenu" class="hidden md:hidden bg-cardBg border-b border-slate-800 px-4 pt-2 pb-4 space-y-1">
+            <a href="#" class="block px-3 py-2 rounded-lg text-emerald-400 bg-slate-800"><i class="fa-solid fa-dice mr-2"></i> Slots</a>
+            <a href="#" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-video mr-2"></i> Live Casino</a>
+            <a href="#" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-futbol mr-2"></i> Sports</a>
+            <a href="#" class="block px-3 py-2 rounded-lg text-slate-300 hover:bg-slate-800"><i class="fa-solid fa-fish mr-2"></i> Fishing</a>
+        </div>
+    </header>
 
-    <article class="widget" aria-labelledby="w-fx">
-      <h3 id="w-fx">Currency Converter <span class="pill" id="fxSrc">ExchangeRate API</span></h3>
-      <div class="wctrl">
-        <label class="sr" for="fxAmt">Amount</label>
-        <input id="fxAmt" type="number" min="0" step="any" value="10">
-        <label class="sr" for="fxFrom">From currency</label>
-        <select id="fxFrom">
-          <option value="USD" selected>USD ($)</option>
-          <option value="KHR">KHR (៛)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="AUD">AUD (A$)</option>
-          <option value="THB">THB (฿)</option>
-          <option value="SGD">SGD (S$)</option>
-          <option value="VND">VND (₫)</option>
-          <option value="JPY">JPY (¥)</option>
-        </select>
-        <label class="sr" for="fxTo">To currency</label>
-        <select id="fxTo">
-          <option value="KHR" selected>KHR (៛)</option>
-          <option value="USD">USD ($)</option>
-          <option value="EUR">EUR (€)</option>
-          <option value="GBP">GBP (£)</option>
-          <option value="AUD">AUD (A$)</option>
-          <option value="THB">THB (฿)</option>
-          <option value="SGD">SGD (S$)</option>
-          <option value="VND">VND (₫)</option>
-          <option value="JPY">JPY (¥)</option>
-        </select>
-      </div>
-      <div class="conv-out" id="fxOut"><span>Loading rates…</span><strong>—</strong></div>
-      <small id="fxNote" style="color:var(--mute)">Tip: Keep crisp USD bills; small change under $1 is usually given in Cambodian Riel (KHR).</small>
-    </article>
+    <!-- MAIN DASHBOARD CONTENT -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- LEFT SIDEBAR: Live Transactions & RTP -->
+        <aside class="space-y-6 lg:col-span-1">
+            <!-- Promotional Hero Banner Card -->
+            <div class="bg-gradient-to-br from-emerald-900/40 via-cardBg to-slate-900 border border-emerald-500/30 rounded-2xl p-5 relative overflow-hidden shadow-xl">
+                <div class="absolute -right-4 -bottom-4 text-emerald-500/10 text-8xl pointer-events-none">
+                    <i class="fa-solid fa-ghost"></i>
+                </div>
+                <span class="bg-emerald-500/20 text-emerald-400 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wider">Welcome Offer</span>
+                <h2 class="text-xl font-bold mt-3 text-white">BONUS UP TO <span class="text-emerald-400">200%</span></h2>
+                <p class="text-xs text-slate-400 mt-1 leading-relaxed">New players score $77 free bonus credits instantly upon registration!</p>
+                <button onclick="openModal('authModal')" class="mt-4 w-full bg-neonGreen hover:bg-neonHover text-black font-bold py-2.5 rounded-xl text-xs uppercase tracking-wider transition shadow-md shadow-emerald-500/20">
+                    Claim Now
+                </button>
+            </div>
 
-    <article class="widget" aria-labelledby="w-fact">
-      <h3 id="w-fact">Cambodia Snapshot <span class="pill">REST Countries</span></h3>
-      <div id="factBox"><p style="color:var(--mute)">Loading country data…</p></div>
-    </article>
-  </div>
-</div></section>
+            <!-- Live RTP Widget -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-4 shadow-lg">
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-semibold text-slate-200 flex items-center">
+                        <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i> Live RTP Tracker
+                    </h3>
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                </div>
+                <div class="space-y-3" id="rtp-list">
+                    <div class="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-900/50 border border-slate-800/60">
+                        <span class="font-medium text-slate-300">Rise Of Mulan</span>
+                        <span class="text-emerald-400 font-bold">RTP 96.5%</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-900/50 border border-slate-800/60">
+                        <span class="font-medium text-slate-300">Super Ace</span>
+                        <span class="text-emerald-400 font-bold">RTP 97.2%</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs p-2 rounded-xl bg-slate-900/50 border border-slate-800/60">
+                        <span class="font-medium text-slate-300">Fortune Gems</span>
+                        <span class="text-emerald-400 font-bold">RTP 95.8%</span>
+                    </div>
+                </div>
+            </div>
 
-<section id="destinations"><div class="wrap">
-  <h2>Destinations</h2><p class="sub">Twelve places to start with, from the temples of Siem Reap to quiet riverside towns and island beaches. Click Explore &amp; map for Wikivoyage guides, nearby Wikipedia sights and live weather.</p>
-  <div class="chips" role="group" aria-label="Filter destinations"></div>
-  <div class="grid" id="grid"></div>
-</div></section>
+            <!-- Live Transactions Ticker -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-4 shadow-lg">
+                <h3 class="text-sm font-semibold text-slate-200 mb-3 flex items-center">
+                    <i class="fa-solid fa-bolt text-amber-400 mr-2"></i> Live Payout Ticker
+                </h3>
+                <div class="space-y-2.5 text-xs" id="transaction-ticker">
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/40">
+                        <span class="text-slate-400">61******867</span>
+                        <span class="text-emerald-400 font-semibold">+AUD 120.00</span>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/40">
+                        <span class="text-slate-400">61******518</span>
+                        <span class="text-emerald-400 font-semibold">+AUD 45.50</span>
+                    </div>
+                    <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/40">
+                        <span class="text-slate-400">61******144</span>
+                        <span class="text-emerald-400 font-semibold">+AUD 320.00</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
 
-<section class="alt" id="info"><div class="wrap">
-  <h2>Know before you go</h2><p class="sub">The essentials for planning, in one place.</p>
-  <div class="tabs" role="tablist" aria-label="Travel information"></div>
-  <div class="panel" id="panel" role="tabpanel" tabindex="0"></div>
-</div></section>
+        <!-- CENTER & RIGHT: Catalog Grid & Search -->
+        <section class="lg:col-span-3 space-y-6">
+            
+            <!-- Category Navigation & Search Bar -->
+            <div class="bg-cardBg border border-slate-800 rounded-2xl p-4 shadow-lg flex flex-col sm:flex-row items-center justify-between gap-4">
+                <!-- Category Tabs -->
+                <div class="flex items-center space-x-2 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+                    <button onclick="filterCategory('all', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-neonGreen text-black transition shadow">All Games</button>
+                    <button onclick="filterCategory('slots', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">Slots</button>
+                    <button onclick="filterCategory('hot', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">Hot Games</button>
+                    <button onclick="filterCategory('live', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">Live</button>
+                    <button onclick="filterCategory('fishing', this)" class="category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">Fishing</button>
+                </div>
+                <!-- Search Input -->
+                <div class="relative w-full sm:w-64">
+                    <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i class="fa-solid fa-search"></i>
+                    </span>
+                    <input type="text" id="gameSearch" oninput="searchGames()" placeholder="Search games..." class="w-full bg-slate-900 border border-slate-800 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-200 focus:outline-none focus:border-emerald-500 transition">
+                </div>
+            </div>
 
-<section id="experience"><div class="wrap">
-  <h2>Embrace the experience</h2><p class="sub">Whatever you picture, Cambodia has a version of it.</p>
-  <div class="exp">
-    <div class="e1"><h3>Temples &amp; history</h3><p>Angkor Wat, Bayon and hundreds of forest temples, from Khmer Empire grandeur to modern memorials.</p></div>
-    <div class="e2"><h3>Islands &amp; coast</h3><p>Powder beaches on Koh Rong, bioluminescent plankton at night and slow days in Kep.</p></div>
-    <div class="e3"><h3>Food &amp; markets</h3><p>Fish amok, beef lok lak, noodle soups and Kampot pepper crab, best eaten at the market.</p></div>
-    <div class="e4"><h3>Nature &amp; wildlife</h3><p>Irrawaddy dolphins at Kratié, waterfalls in Ratanakiri and elephant sanctuaries in Mondulkiri.</p></div>
-  </div>
-</div></section>
+            <!-- Game Catalog Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4" id="gameGrid">
+                <!-- Game cards populated via JS -->
+            </div>
 
-<section class="alt" id="food"><div class="wrap">
-  <h2>Khmer food</h2><p class="sub">Gentle, fresh and fragrant, built on lemongrass, galangal, kroeung paste and river fish.</p>
-  <div class="grid" id="foodGrid"></div>
-</div></section>
+        </section>
 
-<section id="festivals"><div class="wrap">
-  <h2>Events &amp; festivals</h2><p class="sub">Dates follow the lunar calendar, so check them each year.</p>
-  <div class="grid" id="fest"></div>
-</div></section>
+    </main>
 
-<section class="alt" id="faq"><div class="wrap">
-  <h2>FAQs</h2><div style="margin-top:20px">
-  <details><summary>Do I need US dollars or riel?</summary><p>Both work. US dollars are used for most prices and ATMs dispense them. Riel (about 4,000 per US$1) is used for change under a dollar. Bring crisp notes: torn or marked bills are often refused.</p></details>
-  <details><summary>Is Cambodia safe for tourists?</summary><p>Most visits are trouble-free. Watch for bag snatching from tuk-tuks in Phnom Penh, keep a copy of your passport, and take out travel insurance. Police 117, ambulance 119, Tourist Police 012 942 484.</p></details>
-  <details><summary>How many days do I need?</summary><p>Plan 3 days for Siem Reap and Angkor, 2 for Phnom Penh, and 3 to 4 more for the coast or the countryside. Ten to fourteen days covers a good loop.</p></details>
-  <details><summary>Can I use my phone?</summary><p>Yes. Local SIMs from Cellcard, Smart or Metfone cost a few dollars for several GB and are sold at the airports, or use an eSIM bought before you fly.</p></details>
-  <details><summary>What should I wear at temples?</summary><p>Cover shoulders and knees at Angkor and at pagodas, and remove shoes and hats before entering shrines.</p></details>
-  </div>
-</div></section>
+    <!-- FOOTER -->
+    <footer class="bg-darkBg border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p>&copy; 2026 NightReel.ink. All rights reserved.</p>
+            <div class="flex space-x-6">
+                <a href="#" class="hover:text-slate-300 transition">Terms of Service</a>
+                <a href="#" class="hover:text-slate-300 transition">Privacy Policy</a>
+                <a href="#" class="hover:text-slate-300 transition">Responsible Gaming</a>
+            </div>
+        </div>
+    </footer>
 
-<section class="news" id="contact"><div class="wrap">
-  <h2>Get Cambodia travel ideas</h2><p style="color:#c8d0ea;max-width:55ch">Monthly tips on routes, festivals and the best season for each region.</p>
-  <form id="nf"><label class="sr" for="em">Email address</label><input id="em" type="email" required placeholder="you@example.com" autocomplete="email"><button class="btn" type="submit">Subscribe</button></form>
-  <p id="ok" role="status"></p>
-</div></section>
-</main>
+    <!-- PLAY MODAL -->
+    <div id="playModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl max-w-2xl w-full p-6 relative shadow-2xl animate-in fade-in zoom-in duration-200">
+            <button onclick="closeModal('playModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center space-y-4">
+                <div id="modalGameIcon" class="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-3xl text-black shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-dice"></i>
+                </div>
+                <h3 id="modalGameTitle" class="text-2xl font-bold text-white">Game Title</h3>
+                <p id="modalGameCategory" class="text-xs text-emerald-400 font-semibold uppercase tracking-wider">Category</p>
+                <div class="bg-slate-900 border border-slate-800 rounded-2xl p-8 my-4 text-slate-400 text-sm">
+                    <i class="fa-solid fa-circle-notch fa-spin text-emerald-400 text-2xl mb-2"></i>
+                    <p>Loading secure game session...</p>
+                </div>
+                <div class="flex space-x-3 justify-center">
+                    <button onclick="closeModal('playModal')" class="bg-slate-800 hover:bg-slate-700 text-white px-6 py-2.5 rounded-xl text-xs font-semibold transition">Close</button>
+                    <button onclick="simulateSpin()" class="bg-neonGreen hover:bg-neonHover text-black px-6 py-2.5 rounded-xl text-xs font-bold transition shadow-lg shadow-emerald-500/20">Spin / Play</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<dialog id="destModal" aria-labelledby="mTitle">
-  <div class="mhead"><h3 id="mTitle">Destination</h3><button class="mclose" id="mClose" aria-label="Close modal">✕</button></div>
-  <div class="mbody" id="mBody"></div>
-</dialog>
+    <!-- DEPOSIT MODAL -->
+    <div id="depositModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('depositModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-wallet text-emerald-400 mr-2"></i> Deposit Funds</h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Select Amount ($AUD)</label>
+                    <div class="grid grid-cols-3 gap-2">
+                        <button onclick="setDepositAmount(50)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 py-2 rounded-xl text-xs font-semibold text-white transition">$50</button>
+                        <button onclick="setDepositAmount(100)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 py-2 rounded-xl text-xs font-semibold text-white transition">$100</button>
+                        <button onclick="setDepositAmount(500)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 py-2 rounded-xl text-xs font-semibold text-white transition">$500</button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Custom Amount</label>
+                    <input type="number" id="depositInput" value="100" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <button onclick="processDeposit()" class="w-full bg-neonGreen hover:bg-neonHover text-black font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-500/20">
+                    Confirm Deposit
+                </button>
+            </div>
+        </div>
+    </div>
 
-<footer><div class="wrap g">
-  <div><h3>Lotus Route</h3><p>An independent Cambodia travel guide. Not an official government site. Always confirm entry rules with the Cambodian embassy or evisa.gov.kh.</p></div>
-  <div><h3>Quick links</h3><ul><li><a href="#live">Live travel hub</a></li><li><a href="#destinations">Destinations</a></li><li><a href="#info">Know before you go</a></li><li><a href="#food">Khmer food</a></li><li><a href="#festivals">Festivals</a></li><li><a href="#faq">FAQs</a></li></ul></div>
-  <div><h3>Destinations</h3><ul id="ftList"></ul></div>
-  <div><h3>Emergency &amp; APIs</h3><p>Police 117 · Ambulance 119 · Fire 118<br>Tourist Police 012 942 484</p><p style="font-size:.85rem;color:#8e99bd">Data platforms: Wikipedia &amp; Wikivoyage REST APIs, Open-Meteo (Weather, Air Quality, Marine), REST Countries, ExchangeRate-API / Currency API, OpenStreetMap.</p></div>
-</div><div class="wrap" style="margin-top:28px;border-top:1px solid #243158;padding-top:18px">© 2026 Lotus Route · Photos, guides and live telemetry from their respective open platforms</div></footer>
+    <!-- AUTH MODAL -->
+    <div id="authModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4">
+        <div class="bg-cardBg border border-slate-800 rounded-3xl max-w-md w-full p-6 relative shadow-2xl">
+            <button onclick="closeModal('authModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 mx-auto rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-black font-black text-2xl mb-2 shadow-lg shadow-emerald-500/20">
+                    <i class="fa-solid fa-ghost"></i>
+                </div>
+                <h3 class="text-xl font-bold text-white">Welcome to NightReel</h3>
+                <p class="text-xs text-slate-400 mt-1">Sign in to your account or register instantly</p>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Username / Email</label>
+                    <input type="text" placeholder="Enter username..." class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <div>
+                    <label class="block text-xs text-slate-400 mb-1">Password</label>
+                    <input type="password" placeholder="••••••••" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-emerald-500 transition">
+                </div>
+                <button onclick="handleLogin()" class="w-full bg-neonGreen hover:bg-neonHover text-black font-bold py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-lg shadow-emerald-500/20">
+                    Sign In / Register
+                </button>
+            </div>
+        </div>
+    </div>
 
-<script>
-const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-/* TTL cache */
-const cache={get(k){try{const o=JSON.parse(localStorage.getItem('dc:'+k));if(o&&o.e>Date.now())return o.v}catch{}return null},set(k,v,t){try{localStorage.setItem('dc:'+k,JSON.stringify({v,e:Date.now()+t}))}catch{}}};
-async function api(k,u,ttl){const c=cache.get(k);if(c)return c;const r=await fetch(u);if(!r.ok)throw new Error(r.status);const j=await r.json();cache.set(k,j,ttl);return j}
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-emerald-500 text-black font-semibold px-4 py-3 rounded-2xl shadow-2xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center space-x-2">
+        <i class="fa-solid fa-circle-check text-lg"></i>
+        <span id="toastMessage" class="text-xs">Action completed successfully!</span>
+    </div>
 
-const DEST=[
-['Siem Reap','Siem_Reap','culture','Gateway to Angkor, with night markets, Pub Street and cooking classes.',20,13.3671,103.8448,0],
-['Angkor Wat','Angkor_Wat','culture','The largest religious monument in the world. Go at sunrise.',10,13.4125,103.8670,0],
-['Phnom Penh','Phnom_Penh','culture','Royal Palace, riverside cafés, the National Museum and a lively food scene.',350,11.5564,104.9282,0],
-['Kampot','Kampot','nature','Riverside guesthouses, pepper farms and the cool hills of Bokor.',150,10.6104,104.1814,0],
-['Kep','Kep','beach','Crab market, seafood by the sea and sleepy colonial villas.',190,10.4833,104.3167,1],
-['Sihanoukville','Sihanoukville','beach','Ferry hub for the islands, with beaches along Otres.',210,10.6275,103.5221,1],
-['Koh Rong','Koh_Rong','beach','White sand, jungle bungalows and glowing plankton after dark.',200,10.7069,103.2414,1],
-['Battambang','Battambang','culture','Art deco streets, the bamboo train and evening bat flights.',280,13.0957,103.2022,0],
-['Kratié','Kratié','nature','Mekong town where you can spot rare Irrawaddy dolphins.',90,12.4881,106.0188,0],
-['Mondulkiri','Mondulkiri_Province','nature','Cool highlands, waterfalls and ethical elephant sanctuaries.',130,12.4558,107.1881,0],
-['Banlung','Banlung','nature','Swim in crater lake Yeak Laom and explore Ratanakiri waterfalls.',60,13.7394,106.9873,0],
-['Koh Ker','Koh_Ker','culture','A remote jungle capital with a seven-tier pyramid, far from the crowds.',350,13.7831,104.5372,0]
-].map(([n,w,c,t,h,lat,lon,sea])=>({n,w,c,t,h,lat,lon,sea}));
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // Game Catalog Dataset
+        const games = [
+            { id: 1, title: "Golden Empire", category: "slots", badge: "HOT", rtp: "96.8%", icon: "fa-crown", color: "from-amber-500 to-yellow-400" },
+            { id: 2, title: "Super Ace", category: "slots", badge: "JILI", rtp: "97.2%", icon: "fa-dice-five", color: "from-emerald-500 to-teal-400" },
+            { id: 3, title: "Roma X", category: "hot", badge: "POPULAR", rtp: "96.4%", icon: "fa-shield-halved", color: "from-blue-500 to-indigo-500" },
+            { id: 4, title: "Fortune Gems", category: "slots", badge: "JILI", rtp: "95.9%", icon: "fa-gem", color: "from-purple-500 to-pink-500" },
+            { id: 5, title: "Poseidon Fishing", category: "fishing", badge: "NEW", rtp: "97.0%", icon: "fa-fish-fins", color: "from-cyan-500 to-blue-600" },
+            { id: 6, title: "Boxing King", category: "hot", badge: "HOT", rtp: "96.1%", icon: "fa-hand-fist", color: "from-red-500 to-orange-500" },
+            { id: 7, title: "Devil Fire Twins", category: "slots", badge: "JILI", rtp: "95.5%", icon: "fa-fire", color: "from-rose-500 to-red-600" },
+            { id: 8, title: "Live Baccarat", category: "live", badge: "LIVE", rtp: "98.9%", icon: "fa-video", color: "from-slate-700 to-slate-900" },
+            { id: 9, title: "Party Night", category: "slots", badge: "JILI", rtp: "96.7%", icon: "fa-champagne-glasses", color: "from-violet-500 to-purple-600" },
+            { id: 10, title: "Ali Baba", category: "slots", badge: "HOT", rtp: "96.2%", icon: "fa-hat-wizard", color: "from-amber-600 to-yellow-600" },
+            { id: 11, title: "Coin Lightning", category: "hot", badge: "NEW", rtp: "97.5%", icon: "fa-bolt", color: "from-yellow-400 to-amber-500" },
+            { id: 12, title: "Live Blackjack", category: "live", badge: "LIVE", rtp: "99.1%", icon: "fa-desktop", color: "from-slate-800 to-black" }
+        ];
 
-const INFO={
-get:['How to get there','<p>Most visitors fly into <b>Phnom Penh (PNH)</b> or the new <b>Siem Reap-Angkor International (SAI)</b>. Direct flights connect to Bangkok, Singapore, Kuala Lumpur, Hanoi, Seoul and more.</p><ul><li>Overland: buses and taxis from Bangkok (Poipet / Aranyaprathet) and Ho Chi Minh City (Bavet / Moc Bai).</li><li>Boats: the Mekong runs from Vietnam to Phnom Penh, and speedboats connect Phnom Penh and Siem Reap.</li></ul>'],
-when:['When to go','<ul><li><b>November to April (dry):</b> sunny, lower humidity, best for temples and beaches. Peak prices at Christmas and Khmer New Year.</li><li><b>May to October (green):</b> short afternoon showers, green rice fields, fewer people and lower prices. Some islands run reduced services.</li></ul>'],
-around:['Getting around','<ul><li>Tuk-tuks and ride-hailing apps such as Grab and PassApp for cities.</li><li>Comfortable buses and minivans between towns. Book ahead in high season.</li><li>Ferries from Sihanoukville to Koh Rong, and from Kampot and Kep to Koh Tonsay.</li><li>Rent a scooter only with a valid licence, a helmet and insurance.</li></ul>'],
-visa:['Visa & entry','<p>Most nationalities need a visa. Apply for the official <b>Cambodia e-Visa at evisa.gov.kh</b> (about US$36 plus a small processing fee, usually ready in a few business days) or get a visa on arrival. Your passport needs six months of validity and one blank page.</p><p>Rules change, so check the official site and your embassy before you book. Avoid look-alike websites that charge extra.</p>']
-};
-const FOOD=[
-['Fish amok','Fish_amok','Fish steamed in coconut curry and banana leaf, Cambodia’s signature dish.',40],
-['Lok lak','Cambodian_cuisine','Wok-seared beef with a lime and Kampot pepper dipping sauce.',20],
-['Num banh chok','Num_banh_chok','Fresh rice noodles with green fish curry, a traditional breakfast.',135],
-['Kuy teav','Kuy_teav','Pork-bone noodle soup eaten at roadside stalls in the morning.',205]
-].map(([n,w,t,h])=>({n,w,t,h}));
-const FEST=[
-['Khmer New Year','Cambodian_New_Year','Mid-April. Three days of water play, temple visits and family feasts.',35],
-['Visak Bochea','Vesak','May. Candlelit processions mark the Buddha’s birth, enlightenment and passing.',260],
-['Pchum Ben','Pchum_Ben','Sept or Oct. Families make offerings at pagodas for their ancestors.',15],
-['Water Festival','Bon_Om_Touk','November. Boat races and fireworks on the river in Phnom Penh.',210]
-].map(([n,w,t,h])=>({n,w,t,h}));
+        let currentBalance = 1250.00;
 
-/* nav */
-$('#ddList').innerHTML=DEST.map(d=>`<a href="#d-${esc(d.w)}">${esc(d.n)}</a>`).join('');
-$('#ftList').innerHTML=DEST.map(d=>`<li><a href="#d-${esc(d.w)}">${esc(d.n)}</a></li>`).join('');
-$('#burger').onclick=e=>{const o=$('#nav').classList.toggle('on');e.currentTarget.setAttribute('aria-expanded',o)};
-$$('nav li>button').forEach(b=>b.onclick=()=>{const li=b.parentElement,o=!li.classList.contains('open');$$('nav li.open').forEach(x=>x.classList.remove('open'));li.classList.toggle('open',o);b.setAttribute('aria-expanded',o)});
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){$$('nav li.open').forEach(x=>{x.classList.remove('open');x.firstElementChild.setAttribute('aria-expanded',false)});$('#nav').classList.remove('on')}});
-document.addEventListener('click',e=>{if(!e.target.closest('nav'))$$('nav li.open').forEach(x=>x.classList.remove('open'));const a=e.target.closest('[data-tab]');if(a)showTab(a.dataset.tab)});
+        // Render Game Catalog Grid
+        function renderGames(filter = 'all', searchQuery = '') {
+            const grid = document.getElementById('gameGrid');
+            grid.innerHTML = '';
 
-/* Weather helpers (Open-Meteo Weather, Air Quality, Marine) */
-const WMO=c=>c===0?'☀️ Clear':c<=3?'⛅ Partly cloudy':c<=48?'🌫️ Fog':c<=67?'🌧️ Rain':c<=82?'🌦️ Showers':c>=95?'⛈️ Thunderstorm':'☁️ Cloudy';
-const hhmm=s=>s?String(s).slice(11,16):'—';
-const dayName=s=>new Date(s+'T00:00:00').toLocaleDateString('en-US',{weekday:'short'});
-async function getWeather(d){
-  return api(`om:${d.w}`,`https://api.open-meteo.com/v1/forecast?latitude=${d.lat}&longitude=${d.lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,weather_code,wind_speed_10m&daily=weather_code,temperature_2m_max,temperature_2m_min,sunrise,sunset,precipitation_probability_max&timezone=Asia%2FPhnom_Penh&forecast_days=4`,18e5);
-}
-async function getAQI(d){
-  return api(`aq:${d.w}`,`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${d.lat}&longitude=${d.lon}&current=us_aqi,pm2_5&timezone=Asia%2FPhnom_Penh`,18e5);
-}
-async function getMarine(d){
-  return api(`mr:${d.w}`,`https://marine-api.open-meteo.com/v1/marine?latitude=${d.lat}&longitude=${d.lon}&current=wave_height,wave_period&timezone=Asia%2FPhnom_Penh`,18e5);
-}
+            const filtered = games.filter(g => {
+                const matchCat = filter === 'all' || g.category === filter;
+                const matchQuery = g.title.toLowerCase().includes(searchQuery.toLowerCase());
+                return matchCat && matchQuery;
+            });
 
-/* Live weather widget */
-$('#wCity').innerHTML=DEST.map(d=>`<option value="${esc(d.w)}" ${d.w==='Angkor_Wat'?'selected':''}>${esc(d.n)}</option>`).join('');
-async function loadWeatherWidget(wKey){
-  const d=DEST.find(x=>x.w===wKey)||DEST[1];
-  const box=$('#wBox');
-  box.innerHTML='<p style="color:var(--mute)">Loading live forecast…</p>';
-  try{
-    const [w,aq,mr]=await Promise.all([
-      getWeather(d),
-      getAQI(d).catch(()=>null),
-      d.sea?getMarine(d).catch(()=>null):Promise.resolve(null)
-    ]);
-    const c=w.current,dy=w.daily;
-    const badge=$(`[data-wb="${CSS.escape(d.w)}"]`);
-    if(badge)badge.textContent=`${Math.round(c.temperature_2m)}°C`;
-    box.innerHTML=`
-      <div class="kv">
-        <div><small>Condition</small><strong>${esc(WMO(c.weather_code))}</strong></div>
-        <div><small>Temp / Feels like</small><strong>${Math.round(c.temperature_2m)}°C / ${Math.round(c.apparent_temperature)}°C</strong></div>
-        <div><small>Sunrise / Sunset</small><strong>🌅 ${esc(hhmm(dy.sunrise[0]))} · 🌇 ${esc(hhmm(dy.sunset[0]))}</strong></div>
-        <div><small>Wind / Humidity</small><strong>${Math.round(c.wind_speed_10m)} km/h · ${Math.round(c.relative_humidity_2m)}%</strong></div>
-        ${aq&&aq.current?`<div><small>Air Quality (US AQI)</small><strong>${Math.round(aq.current.us_aqi)} (${aq.current.us_aqi<=50?'Good':aq.current.us_aqi<=100?'Moderate':'Elevated'})</strong></div>`:''}
-        ${mr&&mr.current?`<div><small>Sea Waves</small><strong>🌊 ${Number(mr.current.wave_height).toFixed(1)} m (${Math.round(mr.current.wave_period)}s)</strong></div>`:''}
-      </div>
-      <div class="fc">${dy.time.slice(0,4).map((t,i)=>`<div><span>${esc(dayName(t))}</span><strong>${esc(WMO(dy.weather_code[i]).split(' ')[0])} ${Math.round(dy.temperature_2m_max[i])}°</strong><small>${Math.round(dy.temperature_2m_min[i])}° · ${dy.precipitation_probability_max[i]??0}%💧</small></div>`).join('')}</div>`;
-  }catch{
-    box.innerHTML='<p style="color:var(--mute)">Live weather unavailable offline. Dry season runs Nov–Apr; green season May–Oct.</p>';
-  }
-}
-$('#wCity').onchange=e=>loadWeatherWidget(e.target.value);
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full py-12 text-center text-slate-400 text-xs">No games found matching your search.</div>`;
+                return;
+            }
 
-/* Currency Converter (ExchangeRate-API + jsDelivr fawazahmed0 fallback) */
-let fxRates={USD:1,KHR:4050,EUR:0.92,GBP:0.79,AUD:1.53,THB:34.5,SGD:1.34,VND:25300,JPY:152};
-async function loadFX(){
-  try{
-    const j=await api('fx:er','https://open.er-api.com/v6/latest/USD',216e5);
-    if(j&&j.rates&&j.rates.KHR){fxRates=j.rates;$('#fxSrc').textContent='ExchangeRate-API';renderFX();return}
-    throw 0;
-  }catch{
-    try{
-      const j=await api('fx:cdn','https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/usd.json',216e5);
-      if(j&&j.usd){const r={};for(const k in j.usd)r[k.toUpperCase()]=j.usd[k];fxRates=r;$('#fxSrc').textContent='Currency API (CDN)';renderFX();return}
-    }catch{}
-    $('#fxSrc').textContent='Offline estimate';renderFX();
-  }
-}
-function renderFX(){
-  const amt=parseFloat($('#fxAmt').value)||0,from=$('#fxFrom').value,to=$('#fxTo').value;
-  const rFrom=fxRates[from]||1,rTo=fxRates[to]||1;
-  const res=amt*(rTo/rFrom);
-  const fmt=v=>to==='KHR'||to==='VND'||to==='JPY'?Math.round(v).toLocaleString('en-US'):v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-  $('#fxOut').innerHTML=`<span>${amt.toLocaleString('en-US')} ${esc(from)} =</span><strong>${esc(fmt(res))} ${esc(to)}</strong>`;
-}
-$('#fxAmt').oninput=renderFX;$('#fxFrom').onchange=renderFX;$('#fxTo').onchange=renderFX;
+            filtered.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "bg-cardBg border border-slate-800 rounded-2xl overflow-hidden group hover:border-emerald-500/50 transition-all duration-300 shadow-lg flex flex-col justify-between";
+                card.innerHTML = `
+                    <div class="relative h-32 sm:h-36 bg-gradient-to-tr ${game.color} flex items-center justify-center overflow-hidden">
+                        <div class="absolute top-2 left-2 bg-black/60 backdrop-blur text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">
+                            ${game.badge}
+                        </div>
+                        <div class="absolute top-2 right-2 bg-black/60 backdrop-blur text-white text-[10px] font-medium px-2 py-0.5 rounded-md">
+                            ${game.rtp}
+                        </div>
+                        <i class="fa-solid ${game.icon} text-5xl text-white/90 transform group-hover:scale-110 transition duration-300"></i>
+                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                            <button onclick="openPlayModal('${game.title}', '${game.category}', '${game.icon}')" class="bg-neonGreen text-black font-bold text-xs px-4 py-2 rounded-xl shadow-lg transform translate-y-2 group-hover:translate-y-0 transition duration-300">
+                                PLAY NOW
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-3 flex items-center justify-between bg-cardBg">
+                        <span class="font-semibold text-xs text-slate-200 truncate">${game.title}</span>
+                        <button onclick="openPlayModal('${game.title}', '${game.category}', '${game.icon}')" class="text-xs bg-slate-800 hover:bg-emerald-500 hover:text-black text-slate-300 px-3 py-1.5 rounded-xl transition font-medium">
+                            Play
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
 
-/* Country Facts (REST Countries API) + Live Phnom Penh Clock */
-function updateClock(){
-  const el=$('#khClock');
-  if(el)el.textContent=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Phnom_Penh',hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date())+' ICT';
-}
-async function loadCountryFacts(){
-  const box=$('#factBox');
-  try{
-    const j=await api('rc:khm','https://restcountries.com/v3.1/alpha/KHM?fields=name,capital,population,area,currencies,languages,idd,timezones,flags',6048e5);
-    const langs=Object.values(j.languages||{}).join(', ')||'Khmer';
-    const cur=Object.entries(j.currencies||{}).map(([k,v])=>`${k} (${v.symbol||''})`).join(', ')||'KHR, USD';
-    box.innerHTML=`
-      <div class="kv">
-        <div><small>Local Time (Phnom Penh)</small><strong id="khClock">—</strong></div>
-        <div><small>Capital</small><strong>${esc((j.capital||['Phnom Penh'])[0])}</strong></div>
-        <div><small>Population</small><strong>${Number(j.population||17000000).toLocaleString('en-US')}</strong></div>
-        <div><small>Area</small><strong>${Number(j.area||181035).toLocaleString('en-US')} km²</strong></div>
-        <div><small>Languages &amp; Code</small><strong>${esc(langs)} (${esc((j.idd?.root||'+85')+(j.idd?.suffixes?.[0]||'5'))})</strong></div>
-        <div><small>Currencies</small><strong>${esc(cur)}</strong></div>
-      </div>`;
-  }catch{
-    box.innerHTML=`<div class="kv"><div><small>Local Time</small><strong id="khClock">—</strong></div><div><small>Capital</small><strong>Phnom Penh</strong></div><div><small>Calling Code</small><strong>+855</strong></div><div><small>Currency</small><strong>KHR &amp; USD</strong></div></div>`;
-  }
-  updateClock();
-}
+        // Category Filtering
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.category-btn').forEach(b => {
+                b.className = "category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition";
+            });
+            btn.className = "category-btn px-4 py-2 rounded-xl text-xs font-semibold bg-neonGreen text-black transition shadow";
+            const query = document.getElementById('gameSearch').value;
+            renderGames(cat, query);
+        }
 
-/* Wikipedia / Wikivoyage / GeoSearch photo & card loaders */
-const LOTUS='<svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 12c6 8 6 20 0 30-6-10-6-22 0-30zM14 28c10 0 18 6 18 16-10 0-18-6-18-16zm36 0c0 10-8 16-18 16 0-10 8-16 18-16z" fill="#e8b84b"/></svg>';
-const CATS=[['all','All'],['culture','Culture'],['beach','Beach'],['nature','Nature']];
-let cat='all';
-$('.chips').innerHTML=CATS.map(([k,l])=>`<button class="chip" data-c="${k}" aria-pressed="${k==='all'}">${l}</button>`).join('');
-$('.chips').onclick=e=>{const b=e.target.closest('.chip');if(!b)return;cat=b.dataset.c;$$('.chip').forEach(x=>x.setAttribute('aria-pressed',x===b));renderGrid()};
+        // Search Games
+        function searchGames() {
+            const query = document.getElementById('gameSearch').value;
+            renderGames('all', query);
+        }
 
-function fb(el,h){const keep=$$('.tag,.wbadge',el);el.classList.remove('sk');el.classList.add('fb');el.style.setProperty('--h',h);el.innerHTML=LOTUS;keep.forEach(k=>el.appendChild(k))}
-async function photo(item,el){
-  try{
-    const j=await api('w:'+item.w,'https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(item.w),864e5);
-    const u=j.thumbnail&&j.thumbnail.source;
-    if(!u)throw 0;
-    const i=new Image();i.alt=item.n;i.loading='lazy';
-    i.onload=()=>{const keep=$$('.tag,.wbadge',el);el.classList.remove('sk');el.replaceChildren(i,...keep);requestAnimationFrame(()=>i.classList.add('in'))};
-    i.onerror=()=>fb(el,item.h);i.src=u;
-  }catch{fb(el,item.h)}
-}
+        // Modal Controls
+        function openModal(id) {
+            document.getElementById(id).classList.remove('hidden');
+            document.getElementById(id).classList.add('flex');
+        }
 
-async function badgeTemp(d){
-  const el=$(`[data-wb="${CSS.escape(d.w)}"]`);
-  if(!el)return;
-  try{const w=await getWeather(d);el.textContent=`${Math.round(w.current.temperature_2m)}°C`}catch{el.remove()}
-}
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('flex');
+            document.getElementById(id).classList.add('hidden');
+        }
 
-function renderGrid(){
-  const L=DEST.filter(d=>cat==='all'||d.c===cat);
-  $('#grid').innerHTML=L.map(d=>`<article class="card" id="d-${esc(d.w)}"><div class="ph sk" data-w="${esc(d.w)}" role="img" aria-label="${esc(d.n)}"><span class="tag">${esc(d.c)}</span><span class="wbadge" data-wb="${esc(d.w)}">…</span></div><div class="cb"><h3>${esc(d.n)}</h3><p>${esc(d.t)}</p><div class="actions"><button class="btn" type="button" data-open="${esc(d.w)}">Explore &amp; map</button><a class="btn sec" href="https://en.wikipedia.org/wiki/${encodeURIComponent(d.w)}" target="_blank" rel="noopener">Wikipedia<span class="sr"> ${esc(d.n)}</span></a></div></div></article>`).join('');
-  L.forEach(d=>{photo(d,$(`[data-w="${CSS.escape(d.w)}"]`));badgeTemp(d)});
-}
+        function openPlayModal(title, category, icon) {
+            document.getElementById('modalGameTitle').innerText = title;
+            document.getElementById('modalGameCategory').innerText = category.toUpperCase();
+            document.getElementById('modalGameIcon').innerHTML = `<i class="fa-solid ${icon}"></i>`;
+            openModal('playModal');
+        }
 
-/* Destination Modal: Wikipedia Summary + Wikivoyage + Wikipedia GeoSearch + OpenStreetMap + Open-Meteo */
-const modal=$('#destModal');
-$('#mClose').onclick=()=>modal.close();
-modal.addEventListener('click',e=>{if(e.target===modal)modal.close()});
-$('#grid').addEventListener('click',e=>{const b=e.target.closest('[data-open]');if(b)openDestModal(b.dataset.open)});
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
 
-async function openDestModal(wKey){
-  const d=DEST.find(x=>x.w===wKey);if(!d)return;
-  $('#mTitle').textContent=d.n;
-  $('#mBody').innerHTML='<p style="color:var(--mute)">Loading Wikipedia, Wikivoyage, nearby sights and live weather…</p>';
-  modal.showModal();
+        // Deposit & Balance Simulation
+        function setDepositAmount(amount) {
+            document.getElementById('depositInput').value = amount;
+        }
 
-  const [wp,wv,w,gs]=await Promise.all([
-    api('w:'+d.w,'https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(d.w),864e5).catch(()=>null),
-    api('wv:'+d.w,'https://en.wikivoyage.org/api/rest_v1/page/summary/'+encodeURIComponent(d.w),864e5).catch(()=>null),
-    getWeather(d).catch(()=>null),
-    api(`gs:${d.w}`,`https://en.wikipedia.org/w/api.php?action=query&list=geosearch&gscoord=${d.lat}|${d.lon}&gsradius=12000&gslimit=6&format=json&origin=*`,864e5).catch(()=>null)
-  ]);
+        function processDeposit() {
+            const amount = parseFloat(document.getElementById('depositInput').value) || 0;
+            currentBalance += amount;
+            document.getElementById('user-balance').innerText = `$AUD ${currentBalance.toFixed(2)}`;
+            closeModal('depositModal');
+            showToast(`Successfully deposited $AUD ${amount.toFixed(2)}!`);
+        }
 
-  const lat=wp?.coordinates?.lat??d.lat, lon=wp?.coordinates?.lon??d.lon;
-  const bbox=`${(lon-0.08).toFixed(4)},${(lat-0.06).toFixed(4)},${(lon+0.08).toFixed(4)},${(lat+0.06).toFixed(4)}`;
-  const nearby=(gs?.query?.geosearch||[]).filter(x=>x.title.toLowerCase()!==d.n.toLowerCase());
+        function handleLogin() {
+            closeModal('authModal');
+            showToast('Successfully signed in to NightReel!');
+        }
 
-  $('#mBody').innerHTML=`
-    ${w?`<div class="kv"><div><small>Live Weather</small><strong>${esc(WMO(w.current.weather_code))} · ${Math.round(w.current.temperature_2m)}°C</strong></div><div><small>Sunrise / Sunset</small><strong>🌅 ${esc(hhmm(w.daily.sunrise[0]))} · 🌇 ${esc(hhmm(w.daily.sunset[0]))}</strong></div></div>`:''}
-    <div><h4>Overview (Wikipedia)</h4><p style="margin:6px 0 0">${esc(wp?.extract||d.t)}</p></div>
-    ${wv&&wv.extract?`<div><h4>Travel Guide (Wikivoyage)</h4><p style="margin:6px 0 0">${esc(wv.extract)}</p></div>`:''}
-    ${nearby.length?`<div><h4>Nearby Landmarks (Wikipedia GeoSearch)</h4><div class="nearby">${nearby.map(p=>`<a href="https://en.wikipedia.org/?curid=${encodeURIComponent(p.pageid)}" target="_blank" rel="noopener">${esc(p.title)} (${(p.dist/1000).toFixed(1)} km)</a>`).join('')}</div></div>`:''}
-    <iframe title="Map of ${esc(d.n)}" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=${encodeURIComponent(bbox)}&layer=mapnik&marker=${encodeURIComponent(lat)},${encodeURIComponent(lon)}"></iframe>
-    <div style="display:flex;flex-wrap:wrap;gap:10px">
-      <a class="btn" href="https://en.wikivoyage.org/wiki/${encodeURIComponent(d.w)}" target="_blank" rel="noopener">Wikivoyage guide</a>
-      <a class="btn sec" href="https://www.openstreetmap.org/?mlat=${encodeURIComponent(lat)}&mlon=${encodeURIComponent(lon)}#map=13/${encodeURIComponent(lat)}/${encodeURIComponent(lon)}" target="_blank" rel="noopener">Open in OpenStreetMap</a>
-    </div>`;
-}
+        function simulateSpin() {
+            showToast('Game session active! Win simulated: +$AUD 25.00');
+            currentBalance += 25.00;
+            document.getElementById('user-balance').innerText = `$AUD ${currentBalance.toFixed(2)}`;
+        }
 
-/* info tabs */
-$('.tabs').innerHTML=Object.entries(INFO).map(([k,v],i)=>`<button role="tab" id="t-${k}" data-tab="${k}" aria-selected="${i===0}">${v[0]}</button>`).join('');
-function showTab(k){$$('.tabs button').forEach(b=>b.setAttribute('aria-selected',b.dataset.tab===k));$('#panel').innerHTML=INFO[k][1];$('#panel').setAttribute('aria-labelledby','t-'+k)}
-$('.tabs').addEventListener('keydown',e=>{const t=$$('.tabs button'),i=t.findIndex(b=>b.getAttribute('aria-selected')==='true');if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=t[(i+(e.key==='ArrowRight'?1:t.length-1))%t.length];showTab(n.dataset.tab);n.focus()}});
+        // Toast Notification Helper
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = message;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
 
-/* food & festival cards with Wikipedia photos */
-function renderMediaCards(list,target,prefix){
-  $(target).innerHTML=list.map(x=>`<article class="card"><div class="ph sk" data-${prefix}="${esc(x.w)}" role="img" aria-label="${esc(x.n)}"></div><div class="cb"><h3>${esc(x.n)}</h3><p>${esc(x.t)}</p><div class="actions"><a class="btn sec" href="https://en.wikipedia.org/wiki/${encodeURIComponent(x.w)}" target="_blank" rel="noopener">Learn more<span class="sr"> about ${esc(x.n)}</span></a></div></div></article>`).join('');
-  list.forEach(x=>photo(x,$(`[data-${prefix}="${CSS.escape(x.w)}"]`)));
-}
-
-$('#nf').onsubmit=e=>{e.preventDefault();$('#ok').textContent='Thanks! Connect this form to your email provider to start sending.';e.target.reset()};
-
-/* init */
-renderGrid();
-renderMediaCards(FOOD,'#foodGrid','fd');
-renderMediaCards(FEST,'#fest','fs');
-showTab('get');
-loadWeatherWidget('Angkor_Wat');
-loadFX();
-loadCountryFacts();
-setInterval(updateClock,1000);
-</script>
+        // Initialize on load
+        window.onload = function() {
+            renderGames();
+        }
+    </script>
 </body>
 </html>
