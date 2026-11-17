@@ -871,7 +871,7 @@ footer {
 </div></header>
 <main>
 <section class="hero" id="hero" aria-label="Featured"></section>
-<div class="wrap"><div class="rights-strip"> <strong>▶ Playable open films</strong> <span>Watch complete, legally shared films with credits. Other catalog titles are information-only until you add licensed videos.</span> <button data-n="Watch now">Browse playable →</button></div></div>
+<div class="wrap"><div class="rights-strip"> <strong>▶ Playable open filmsif (nav === "Playable") r = r.filter(i => srcFor(i));</strong> <span>Watch complete, legally shared films with credits. Other catalog titles are information-only until you add licensed videos.</span> <button data-n="Playable">Browse playable →</button></div></div>
 <div class="wrap">
 <div class="filters"><h3 id="ttl">Latest updates</h3>
 <select id="sort" aria-label="Sort"><option value="new">Newest</option><option value="rate">Top rated</option><option value="az">A–Z</option></select>
@@ -897,11 +897,29 @@ const slideStyle = i => i.backdrop ? `background:linear-gradient(to right, rgba(
 
 let items = [];
 let nav = "Home", country = "All", sort = "new", term = "", shown = 12, slide = 0, timer;
-let saved = [];
+let saved = [let sources = {};
+try { sources = JSON.parse(localStorage.getItem("nr-src") || "{}"); } catch (e) {}
+
+const OPEN_FILMS = [
+  { title:"Big Buck Bunny", year:2008, rate:7.1, desc:"Blender Foundation open movie. Licensed CC BY 3.0 © Blender Foundation | peach.blender.org",
+    src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" },
+  { title:"Sintel", year:2010, rate:7.5, desc:"Blender Foundation open movie. Licensed CC BY 3.0 © Blender Foundation | durian.blender.org",
+    src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" },
+  { title:"Tears of Steel", year:2012, rate:6.9, desc:"Blender Foundation open movie. Licensed CC BY 3.0 © Blender Foundation | mango.blender.org",
+    src:"https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4" }
+];
+
+const srcFor = i => i.src || sources[i.tmdbId] || "";
+
+function playerHTML(src, title) {
+  if (!/^https:\/\//i.test(src)) return "";
+  const yt = src.match(/(?:v=|youtu\.be\/|embed\/)([\w-]{11})/);
+  if (yt) return `<div class="video-stage"><iframe width="100%" height="100%" style="border:0" src="https://www.youtube.com/embed/${yt[1]}?autoplay=1" title="${title}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+  return `<div class="video-stage"><video controls autoplay playsinline src="${src.replace(/"/g, "%22")}"></video></div>`;
+}];
 try { saved = JSON.parse(localStorage.getItem("nr-saved") || "[]"); } catch (e) {}
 
-const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "My list"];
-$("#nav").innerHTML = navs.map(n => `<button data-n="${n}">${n}</button>`).join("");
+const navs = ["Home", "Drama", "Movies", "Anime", "Variety", "Playable", "My list"];
 
 const countries = ["All", "Korea", "China", "Japan", "Thailand"];
 $("#chips").innerHTML = countries.map(c => `<button class="chip" data-c="${c}">${c}</button>`).join("");
@@ -960,7 +978,10 @@ async function loadTMDB() {
       });
     });
 
-    items = fetched;
+    items = fetched;OPEN_FILMS.forEach((f, k) => fetched.push({
+  ...f, id: idx + k, tmdbId: "open-" + k, media: "open", country: "Open", type: "Movie",
+  eps: 1, poster: "", backdrop: "", h: hues[(idx + k) % hues.length]
+}));
     heroBuild();
     render();
     auto();
@@ -1014,7 +1035,39 @@ function heroBuild() {
         </div>
         <h2>${i.title}</h2>
         <p>${i.desc}</p>
-        <button class="btn p" data-watch="${i.id}">▶ Watch Trailer</button>
+        <button class="btn p" data-watch="${i.id}">▶ async function watch(id, ep = 1) {
+  const i = items[id]; if (!i) return;
+  const src = srcFor(i);
+  if (src) {
+    $("#sheet").innerHTML = `
+      <button class="x" data-close aria-label="Close">✕</button>
+      ${playerHTML(src, i.title)}
+      <div class="pc"><span>${i.title}</span>
+        <button class="btn s" data-src="${id}">Change source</button>
+        <button class="btn s" data-id="${id}">Details</button></div>
+      <div class="source-note">${i.src ? i.desc : "Video supplied by the site owner, who confirms they hold the rights to show it."}</div>`;
+    open_(); return;
+  }
+  /* ...existing trailer code unchanged... */
+}
+
+function sourceEditor(id) {
+  const i = items[id];
+  $("#sheet").innerHTML = `
+    <button class="x" data-close aria-label="Close">✕</button>
+    <div class="source-editor">
+      <span class="watch-pill">Licensed video</span>
+      <h2>${i.title}</h2>
+      <p>Paste an https link to an MP4 or YouTube video you own or are licensed to stream.</p>
+      <label for="srcin">Video URL</label>
+      <input id="srcin" placeholder="https://..." value="${sources[i.tmdbId] || ""}">
+      <div class="source-actions">
+        <button class="btn p" data-savesrc="${id}">Save &amp; play</button>
+        <button class="btn s" data-clearsrc="${id}">Remove</button>
+      </div>
+    </div>`;
+  open_();
+}</button>
         <button class="btn s" data-id="${i.id}">Details</button>
       </div>
     </div>
